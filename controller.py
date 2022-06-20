@@ -46,3 +46,14 @@ class Controller(object):
         
     def set_quantity(self, product_id = None, store_id = None, quantity = None):
         self.model.set_quantity(product_id, store_id, quantity)
+        
+    def query_json(self):
+        return self.model.query_json()
+    #********
+    #Testing below
+    #********
+    def query_json2(self, query=None):
+        return self.model.query_json2(query=None)
+    
+    def query_json3(self, query=None):
+        return self.model.query_json3(query=None)

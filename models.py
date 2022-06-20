@@ -14,6 +14,7 @@ class Product(Base):
 class Store(Base):
     __tablename__ = 'stores'
     id = Column(Integer, primary_key = True, nullable = False) 
+    name = Column(String, nullable = False)
     type = Column(String(20), nullable = False) 
     address = Column(String(200), nullable = False) 
     
@@ -21,5 +22,6 @@ class Quantity(Base):
     __tablename__ = 'quantities'
     product_id = Column(Integer, ForeignKey('products.id'), primary_key = True, nullable = False)
     store_id = Column(Integer, ForeignKey('stores.id'), primary_key = True, nullable = False)
+    quantity = Column(Integer, nullable = False)
     
     

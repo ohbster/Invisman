@@ -2,7 +2,7 @@
 
 database_file="invisman.db"
 
-while getopts 'd:Ditp' OPTION; do
+while getopts 'd:DiItp' OPTION; do
 	case "$OPTION" in
 		i)
 			echo "**********initializing**********"
@@ -12,15 +12,23 @@ while getopts 'd:Ditp' OPTION; do
 			pip install flask
 			pip install sqlalchemy
 			pip install requests
+			
 			#cat countries.sql | sqlite3 invisman.db
 			python3 app.py
+			
 
 			;;
-			
+		I)
+			echo "************ populating tables ************"
+			export FLASK_APP=populate_tables.py
+			pip install faker
+			python3 populate_tables.py
+			;;
 		t)
 			source env/bin/activate
 			echo "************ testing ************"			 
 			export FLASK_APP=tester.py
+			export FLASK_ENV=development
 			flask run
 
 			;;

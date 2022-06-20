@@ -1,5 +1,5 @@
 from database import Session, engine
-from sqlalchemy import text, select
+from sqlalchemy import text, select, inspect
 
 from flask import Flask
 from flask import url_for
@@ -16,6 +16,29 @@ app = Flask(__name__)
 
 class Model():
     
+    #snippet below from:
+    
+    
+    
+    
+    
+    #user SuperShoot @ https://stackoverflow.com/questions/1958219/how-to-convert-sqlalchemy-row-object-to-a-python-dict
+    def object_as_dict(self, obj):
+        return {c.key: getattr(obj, c.key)
+                for c in inspect(obj).mapper.column_attrs}
+
+    def query_json(self, query=None):
+        #query = session.query(Store)
+        
+        #for item in query(Store).all():
+        if query is not None:
+            data = {'data':[{}]}
+            for row in query:
+                data['data'].append(self.object_as_dict(row))
+            return json.dumps(data)
+        else:
+            return None
+    
     def get_products(self):
         #return self.model.get_products()
         pass
@@ -25,8 +48,18 @@ class Model():
         pass
         
     def get_store(self, store_id):
-        query = session.query(Store).filter_by(id=store_id)
-        return json.dumps(query.scalar().__dict__)
+        query = session.query(Store).filter_by(id=store_id).scalar()
+        data ={'data':[{
+            
+                'id': query.id,
+                'type': query.type,
+                'address': query.address,
+                }],
+            'response':'200',
+            }
+        data = json.dumps(data)
+        
+        return data
         #store = self.model.get_store(store_id)
         #return store
        
