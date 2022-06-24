@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<body>
+<table border = 0>
+<tr>
+
+	<th>ID</th>
+	<th>Name</th>
+	<th>Description</th>
+	<th>Image</th>
+	<th>MSRP</th>
+</tr>
+{% for row in result['data'] %}
+<tr>
+	<td> {{ row.id }} </td>
+	<td> {{ row.name }} </td>
+	<td> {{ row.description }} </td>
+	<td> {{ row.image }} </td>
+	<td> {{ row.msrp }} </td>
+</tr>
+{% endfor %}
+
+</table>
+</body>
+</html>

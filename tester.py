@@ -1,5 +1,6 @@
 from app import *
-
+import requests
+from flask import jsonify
 
 controller = view.get_controller()
 
@@ -18,17 +19,56 @@ def test_query_json2():
     
 @app.route('/api/test_query_json3')
 def test_query_json3():
-    result = controller.query_json3(session.query(Store).all())
+    result = controller.query_json(session.query(Store).all())
     if result is not None:
-        return result
+        return json.loads(result)
     else:
         return {'body':[{
             'message': 'No results',
             'response': '200',
             }]}
         
+@app.route('/api/get_json')
+def get_json():
+    response = requests.get('http://127.0.0.1:5000/api/test_query_json3')
+    result = json.loads(response.text)
+    return result
+
+@app.route('/api/stores')
+def stores_get():
+    result = controller.query_json(session.query(Store).all())
+    if result is not None:
+        return json.loads(result)
+    else:
+        return {'body':[{
+            'message': 'No results',
+            'response': '200',
+            }]}
+        
+@app.route('/api/test_list_stores',methods = ['POST', 'GET'])
+def test_list_stores():
+   response = requests.get('http://127.0.0.1:5000/api/test_query_json3')
+   result = json.loads(response.text)
+   #result = jsonify(response.text)
+   return render_template('list_stores.html',result=result)
         
         
+@app.route('/api/products', methods=['GET'])
+def products_get():
+    result = controller.query_json(session.query(Product).all())
+    if result is not None:
+        return json.loads(result)
+    else:
+        return {'body':[{
+            'message' : 'No results', 
+            'response' : '200',
+            }]}
+        
+@app.route('/api/list_products')
+def test_list_products():
+    response = requests.get('http://127.0.0.1:5000/api/products')
+    result = json.loads(response.text)
+    return render_template('list_products.html', result=result)
 #SCRAP AREA
 """
  def query_json3(self, query=None):

@@ -17,11 +17,6 @@ app = Flask(__name__)
 class Model():
     
     #snippet below from:
-    
-    
-    
-    
-    
     #user SuperShoot @ https://stackoverflow.com/questions/1958219/how-to-convert-sqlalchemy-row-object-to-a-python-dict
     def object_as_dict(self, obj):
         return {c.key: getattr(obj, c.key)
@@ -32,7 +27,7 @@ class Model():
         
         #for item in query(Store).all():
         if query is not None:
-            data = {'data':[{}]}
+            data = {'data':[]}
             for row in query:
                 data['data'].append(self.object_as_dict(row))
             return json.dumps(data)

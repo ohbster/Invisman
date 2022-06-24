@@ -1,5 +1,16 @@
 #!/bin/bash
 
+if [ -z "$1" ]
+then
+	echo "-i	Fresh install"
+	echo "-I	Initialize database"
+	echo "-t	Enter testing mode"
+	echo "-p	Enter production mode"
+	echo "-D 	Delete the database"
+	echo "-d	Drop database <argument>"
+fi
+
+
 database_file="invisman.db"
 
 while getopts 'd:DiItp' OPTION; do
@@ -12,6 +23,7 @@ while getopts 'd:DiItp' OPTION; do
 			pip install flask
 			pip install sqlalchemy
 			pip install requests
+			pip install faker
 			
 			#cat countries.sql | sqlite3 invisman.db
 			python3 app.py
@@ -21,7 +33,6 @@ while getopts 'd:DiItp' OPTION; do
 		I)
 			echo "************ populating tables ************"
 			export FLASK_APP=populate_tables.py
-			pip install faker
 			python3 populate_tables.py
 			;;
 		t)

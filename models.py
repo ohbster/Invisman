@@ -23,5 +23,6 @@ class Quantity(Base):
     product_id = Column(Integer, ForeignKey('products.id'), primary_key = True, nullable = False)
     store_id = Column(Integer, ForeignKey('stores.id'), primary_key = True, nullable = False)
     quantity = Column(Integer, nullable = False)
+    active = Column(Boolean, nullable = False)
     
     
