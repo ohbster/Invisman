@@ -12,6 +12,9 @@ class Controller(object):
     def show_product(self, _product_id): #check this one
         item = self.model.get_item(_product_id)
         self.view.draw_inventory()
+        
+    def get_product(self, id=None):
+        return self.model.get_product(id)
 
     def get_products(self):
         return self.model.get_products()
@@ -38,6 +41,9 @@ class Controller(object):
     def get_product_quantities(self, _store_id):
         return self.model.get_product_quantities(_store_id)
     
+    #add
+    def add_product(self, product=None):
+        return self.model.add_product(product)
     def add_quantity(self,product_id=None, store_id=None, quantity=None):
         return self.model.add_quantity(product_id, store_id, quantity)
 

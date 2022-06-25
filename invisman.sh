@@ -24,6 +24,7 @@ while getopts 'd:DiItp' OPTION; do
 			pip install sqlalchemy
 			pip install requests
 			pip install faker
+			pip install multipledispatch
 			
 			#cat countries.sql | sqlite3 invisman.db
 			python3 app.py

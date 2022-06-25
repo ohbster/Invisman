@@ -60,7 +60,9 @@ def test_list_products():
     result = json.loads(response.text)
     return render_template('list_products.html', result=result)
 
-
+@app.route('/api/test_product_update')
+def test_product_update():
+    return controller.get_product(3)
     
             
          

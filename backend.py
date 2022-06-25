@@ -6,7 +6,7 @@ from flask import url_for
 from flask import render_template
 from models import *
 import json
-
+from multipledispatch import dispatch
 
 session = Session()
 Base.metadata.create_all(engine)
@@ -34,6 +34,14 @@ class Model():
         else:
             return None
     
+    #******************
+    #Reads
+    #******************
+    @dispatch(int)
+    def get_product(self, id=None):
+        query = session.query(Product).filter_by(id=id)
+        return json.loads(self.query_json(query))
+    
     def get_products(self):
         #return self.model.get_products()
         pass
@@ -56,8 +64,7 @@ class Model():
         
         return data
         #store = self.model.get_store(store_id)
-        #return store
-       
+        #return store      
     
     def get_stores(self):
         #return self.model.get_stores()
@@ -82,6 +89,12 @@ class Model():
     #***************
     #Create
     #***************
+    @dispatch(Product)
+    def add_product(self, product=None):
+        session.add(product)
+        session.commit()
+    
+    @dispatch(dict)
     def add_product(self, product_dict=None):
         insp = inspect(Product)
 
@@ -95,6 +108,13 @@ class Model():
         #self.model.add_product_quantity(_product_quantity)
         pass
         
+    #******************
+    #Updates
+    #******************
+    @dispatch(dict)
+    def set_product(self, attrs=None):
+        pass
+    
     def set_quantity(self, product_id = None, store_id = None, quantity = None):
         #self.model.set_quantity(product_id, store_id, quantity)
         pass

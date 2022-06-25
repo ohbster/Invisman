@@ -39,7 +39,8 @@ def products_get():
 @app.route('/api/products_list')
 def products_list():
     result = products_get()
-    return render_template('products_list.html', result=result)
+    fields = inspect(Product).all_orm_descriptors.keys()#get all attributes of Product
+    return render_template('products_list.html', result=result, fields=fields)
 
 @app.route('/api/product_add', methods=['GET'])
 def product():
@@ -56,9 +57,10 @@ def product_add():
             setattr(obj,c.key, form_data[c.key]) #assign the form data to the object's respective attribute
     
     #replace the below code. Should send the object to backend to be added to database. 
-    session.add(obj)
-    session.commit() #End of function
+    controller.add_product(obj)
+    #session.add(obj)
+    #session.commit() #End of function
     
-    result = products_get()
-    return render_template('products_list.html', result=result)
-    
+    #result = products_get()
+    return products_list()
+
