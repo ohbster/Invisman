@@ -1,6 +1,7 @@
 from app import *
 import requests
 from flask import jsonify
+from sqlalchemy import inspect
 
 controller = view.get_controller()
 
@@ -53,22 +54,18 @@ def test_list_stores():
    return render_template('list_stores.html',result=result)
         
         
-@app.route('/api/products', methods=['GET'])
-def products_get():
-    result = controller.query_json(session.query(Product).all())
-    if result is not None:
-        return json.loads(result)
-    else:
-        return {'body':[{
-            'message' : 'No results', 
-            'response' : '200',
-            }]}
-        
-@app.route('/api/list_products')
+@app.route('/api/test_list_products')
 def test_list_products():
     response = requests.get('http://127.0.0.1:5000/api/products')
     result = json.loads(response.text)
     return render_template('list_products.html', result=result)
+
+
+    
+            
+         
+            
+
 #SCRAP AREA
 """
  def query_json3(self, query=None):
@@ -95,10 +92,7 @@ def test_list_products():
                     i = i + 1
                 
                 #query_name = query.column_descriptions.name
-
             return json.dumps(data)   
-
-
 """
 
 """
@@ -114,5 +108,4 @@ def query_json2(self):
             data['data'][i][column] = getattr(query,column)
             i = i + 1
         return json.dumps(data)
-
 """

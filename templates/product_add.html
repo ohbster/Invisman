@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<body>
+  <form action="product_add" METHOD="POST">
+    {% for field in fields %}
+      {% if field == 'id' %}
+      {% else %}
+    <p>{{ field }} = <input type= "text" name = "{{ field }}"/></p>
+      {% endif %}
+    {% endfor %}
+
+    {# Find a way to parameterize the above code so that it can be reused.
+      I.E. Table headers
+
+    #}
+    <p><input type = "submit" value = "submit" /></p>
+  </form>
+</body>
+</html>

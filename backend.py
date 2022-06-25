@@ -79,6 +79,14 @@ class Model():
         #return self.model.get_product_quantities(_store_id)
         pass
     
+    #***************
+    #Create
+    #***************
+    def add_product(self, product_dict=None):
+        insp = inspect(Product)
+
+        pass
+    
     def add_quantity(self,product_id=None, store_id=None, quantity=None):
         #return self.model.add_quantity(product_id, store_id, quantity)
         pass
