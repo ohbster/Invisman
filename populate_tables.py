@@ -1,6 +1,6 @@
 from tester import *
 from faker import Faker
-from itertools import product
+from itertools import product_new
 #initialze database
 fake = Faker()
 
@@ -16,14 +16,14 @@ def add_stores():
 
 def add_products():
     for i in range(100):
-        product = Product(
+        product_new = Product(
             name = fake.name(),
             description = fake.paragraph(nb_sentences = 3),
             image = fake.file_name(category='image'),
             msrp = 19.95
             #msrp = fake.pricetag(),
             )
-        session.add(product)
+        session.add(product_new)
     session.commit()
 #populate tables
 add_stores()

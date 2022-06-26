@@ -37,14 +37,21 @@ class Model():
     #******************
     #Reads
     #******************
-    @dispatch(int)
-    def get_product(self, id=None):
-        query = session.query(Product).filter_by(id=id)
-        return json.loads(self.query_json(query))
+    #@dispatch(int)
+    def product_get(self, product_id=None):
+        product = session.query(Product).get(product_id)
+        #query = session.query(Product).filter_by(id=product_id)
+        #return json.loads(self.query_json(query))  
+        return self.object_as_dict(product)
+        
     
     def get_products(self):
         #return self.model.get_products()
         pass
+    
+    def get_product_keys(self):
+        keys = inspect(Product).all_orm_descriptors.keys()
+        return keys
 
     def get_unlisted_products(self, store_id):
         #return self.model.get_unlisted_products(store_id)
@@ -90,15 +97,19 @@ class Model():
     #Create
     #***************
     @dispatch(Product)
-    def add_product(self, product=None):
-        session.add(product)
+    def product_add(self, product_new=None):
+        session.add(product_new)
         session.commit()
     
     @dispatch(dict)
-    def add_product(self, product_dict=None):
-        insp = inspect(Product)
-
-        pass
+    def product_add(self, product_dict=None):
+        obj = Product()
+        for c in inspect(obj).mapper.column_attrs:
+            if c.key != 'id': #ignore id key as this is assigned by database, not form data
+                setattr(obj,c.key, product_dict[c.key]) #assign the form data to the object's respective attribute
+    
+        #replace the below code. Should send the object to backend to be added to database. 
+        self.product_add(obj)
     
     def add_quantity(self,product_id=None, store_id=None, quantity=None):
         #return self.model.add_quantity(product_id, store_id, quantity)
@@ -111,10 +122,24 @@ class Model():
     #******************
     #Updates
     #******************
-    @dispatch(dict)
-    def set_product(self, attrs=None):
-        pass
+    @dispatch(str,dict)
+    def set_product(self, product_id=None, attrs=None): #attrs is json TODO: Need to pass product id into signature to avoid 
+        #allowing a user to overwrite products by altering DOM
+        obj = session.query(Product).get(product_id) 
+        #obj = session.query(Product).get(1)#Not sure why this doesnt work. may need to pass ID seperately.
+        
+        #This mesthod is dangerous. Should not allow user to write the ID key.
+        for key in attrs: #for each attribute in the attrs list, assign its value to the product_new
+            if key != 'id': #skip!
+                setattr(obj, key, attrs[key])
+        session.commit()
+        
     
     def set_quantity(self, product_id = None, store_id = None, quantity = None):
         #self.model.set_quantity(product_id, store_id, quantity)
         pass
+    
+    @dispatch(str)
+    def delete_product(self, product_id):
+        session.query(Product).filter_by(id=product_id).delete()
+        session.commit()

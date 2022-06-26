@@ -62,7 +62,15 @@ def test_list_products():
 
 @app.route('/api/test_product_update')
 def test_product_update():
-    return controller.get_product(3)
+    return controller.product_get(3)
+
+@app.route('/api/test_product_get')
+def test_product_get():
+    return controller.product_get(1)
+
+@app.route('/api/test_delete/<product_id>')
+def test_delete_product(product_id=None):
+    return delete_product(product_id)
     
             
          
