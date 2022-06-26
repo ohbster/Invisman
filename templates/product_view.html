@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<body>
+  <form action="/api/product_update/{{ product['id'] }}" METHOD="POST">
+    {% for key in product %}
+      {% if key == 'id' %}
+      <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}" /></p>
+      {% else %}
+      <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}"/></p>
+      {% endif %}
+    {% endfor %}
+
+    {# Find a way to parameterize the above code so that it can be reused.
+      I.E. Table headers
+
+    #}
+    <p><input type = "submit" value = "Update" /></p>
+  </form>
+</body>
+</html>
