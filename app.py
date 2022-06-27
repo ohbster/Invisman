@@ -9,9 +9,6 @@ from backend import Model
 from view import View
 from view import *
 import json
-
-
-#dummy view class
  
 model = Model()
 view = View()
@@ -22,11 +19,20 @@ session = Session()
 Base.metadata.create_all(engine)
 connection = engine.connect()
 
-
 app = Flask(__name__)
 
+#These variables make it easier to 
+PRODUCT_LIST_ROUTE = '/products'
+STORE_LIST_ROUTE = '/stores'
+#****************************
+#Product Routes
+#
+#****************************
+
+#API calls
+
 @app.route('/api/products', methods=['GET'])
-def products_get(): #*************TODO: Handle this in backend and call it from controller
+def get_products(): #*************TODO: Handle this in backend and call it from controller
     result = controller.query_json(session.query(Product).all())
     if result is not None:
         return json.loads(result)
@@ -36,40 +42,44 @@ def products_get(): #*************TODO: Handle this in backend and call it from 
             'response' : '200',
             }]}
 
-@app.route('/api/products_list')
-def products_list():
-    result = products_get()
-    fields = controller.get_product_keys() #get all attributes of Product
-    return render_template('products_list.html', result=result, fields=fields)
 
-@app.route('/api/product_add', methods=['GET'])
+
+#Front End
+
+@app.route(PRODUCT_LIST_ROUTE)
+def list_products():
+    result = get_products()
+    fields = controller.get_product_keys() #get all attributes of Product
+    return render_template('list_products.html', result=result, fields=fields)
+
+@app.route('/add_product', methods=['GET'])
 def product_new():
     #to return product keys as json.
     fields = controller.get_product_keys()
-    return render_template('product_add.html', fields=fields)
+    return render_template('add_product.html', fields=fields)
 
 #The Below function can add a product_new (or any ORM object) to database, and allows for change in schema.
-@app.route('/api/product_add', methods=['POST'])
-def product_add():
+@app.route('/add_product', methods=['POST'])
+def add_product():
     form_data = request.form
-    controller.product_add(form_data)
-    return products_list()
+    controller.add_product(form_data)
+    return redirect(PRODUCT_LIST_ROUTE)
 
-@app.route('/api/product_update/<product_id>', methods=['POST'])
-def product_update(product_id=None):
+@app.route('/update_product/<product_id>', methods=['POST'])
+def update_product(product_id=None):
     #need to pass id to this function
     form_data = request.form
     controller.set_product(product_id=product_id,attrs=form_data)
-    return products_list()
+    return list_products()
     
-@app.route('/api/product_view/<product_id>')
-def product_view(product_id=None):
+@app.route('/view_product/<product_id>')
+def view_product(product_id=None):
     #get fields for the update form
     fields = controller.get_product_keys() #Possibly rendundant
     product = controller.product_get(product_id=product_id)
-    return render_template('product_view.html',fields=fields, product=product)
+    return render_template('view_product.html',fields=fields, product=product)
 
 @app.route('/api/delete_product/<product_id>')
 def delete_product(product_id=None):
     controller.delete_product(product_id)
-    return redirect('/api/products_list')
+    return redirect(PRODUCT_LIST_ROUTE)

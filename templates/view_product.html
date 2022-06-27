@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <body>
-  <form action="/api/product_update/{{ product['id'] }}" METHOD="POST">
+  <form action="/product_update/{{ product['id'] }}" METHOD="POST">
     {% for key in product %}
       {% if key == 'id' %}
       <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}" /></p>
