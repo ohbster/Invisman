@@ -37,6 +37,7 @@ class Model():
         else:
             return None
     
+    @dispatch(Product)
     def add_entity(self,model=None, new_entity=None):
         session.add(new_entity)
         session.commit()
@@ -45,9 +46,29 @@ class Model():
         entity = session.query(model).get(entity_id)
         return self.object_as_dict(entity)
     
+    def get_entities(self,model=None):
+        result = self.query_json(session.query(model).all())
+        if result is not None:
+            return json.loads(result)
+        # else:
+        #     return {'body':[{
+        #         'message': 'No results',
+        #         'response': '200',
+        #         }]}
+    
     def get_entity_keys(self,model=None):
         keys = inspect(model).all_orm_descriptors.keys()
         return keys
+    
+    def set_entity(self,model=None,entity_id=None,attrs=None):
+        #allowing a user to overwrite products by altering request
+        obj = session.query(model).get(entity_id) 
+        
+        #This mesthod is dangerous. Should not allow user to write the ID key.
+        for key in attrs: #for each attribute in the attrs list, assign its value to the product_new
+            if key != 'id': #skip id!
+                setattr(obj, key, attrs[key])
+        session.commit()
     #****************************
     #Product Functions
     #
@@ -74,8 +95,8 @@ class Model():
         return self.get_entity(Product,product_id)
     
     def get_products(self):
+        return self.get_entities(Product)
         #return self.model.get_products()
-        pass
     
     def get_product_keys(self):
         return self.get_entity_keys(Product)
@@ -88,14 +109,7 @@ class Model():
  
     @dispatch(str,dict)
     def set_product(self, product_id=None, attrs=None): #attrs is json TODO: Need to pass product id into signature to avoid 
-        #allowing a user to overwrite products by altering request
-        obj = session.query(Product).get(product_id) 
-        
-        #This mesthod is dangerous. Should not allow user to write the ID key.
-        for key in attrs: #for each attribute in the attrs list, assign its value to the product_new
-            if key != 'id': #skip id!
-                setattr(obj, key, attrs[key])
-        session.commit()
+        return self.set_entity(Product,product_id,attrs)
      
     #delete 
      

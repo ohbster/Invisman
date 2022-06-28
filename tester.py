@@ -35,7 +35,7 @@ def get_json():
     result = json.loads(response.text)
     return result
 
-@app.route('/api/stores')
+@app.route('/test/stores')
 def stores_get():
     result = controller.query_json(session.query(Store).all())
     if result is not None:

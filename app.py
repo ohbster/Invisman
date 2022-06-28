@@ -33,16 +33,21 @@ STORE_LIST_ROUTE = '/stores'
 
 @app.route('/api/products', methods=['GET'])
 def get_products(): #*************TODO: Handle this in backend and call it from controller
-    result = controller.query_json(session.query(Product).all())
-    if result is not None:
-        return json.loads(result)
-    else:
-        return {'body':[{
-            'message' : 'No results', 
-            'response' : '200',
-            }]}
-
-
+    return controller.get_entities(Product)
+    # result = controller.query_json(session.query(Product).all())
+    # if result is not None:
+    #     return json.loads(result)
+    # if result is not None:
+    #     return result
+    # else:
+    #     return {'body':[{
+    #         'message' : 'No results', 
+    #         'response' : '200',
+    #         }]}
+        
+@app.route('/api/stores')
+def get_stores():
+    return controller.get_entities(Store)
 
 #Front End
 

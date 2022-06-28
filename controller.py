@@ -16,6 +16,9 @@ class Controller(object):
     def object_as_dict(self, obj=None):
         return self.model.object_as_dict(obj)
     
+    def get_entities(self,model=None):
+        return self.model.get_entities(model)
+    
     #****************************
     #Product Functions
     #
