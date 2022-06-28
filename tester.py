@@ -62,20 +62,38 @@ def test_list_products():
 
 @app.route('/api/test_product_update')
 def test_product_update():
-    return controller.product_get(3)
+    return controller.get_product(3)
 
 @app.route('/api/test_product_get')
 def test_product_get():
-    return controller.product_get(1)
+    return controller.get_product(1)
 
 @app.route('/api/test_delete/<product_id>')
 def test_delete_product(product_id=None):
     return delete_product(product_id)
-    
-            
-         
-            
 
+def query_json2(self, query=None):
+        #for item in query(Store).all():
+        if query is not None:
+            data = {'products':[]}
+            for row in query:
+                data['products'].append(self.object_as_dict(row))
+            return json.dumps(data)
+        else:
+            return None
+    
+@app.route('/test/gridjs_test1')            
+def gridjs_data1():
+    result = get_products()
+    fields = controller.get_product_keys() #get all attributes of Product
+    return render_template('firstgrid.html', result=result, fields=fields)
+
+@app.route('/test/gridjs_ajax')
+def gridjs_ajax():
+    result = get_products()
+    fields = controller.get_product_keys()
+    return render_template('ajaxgrid.html')
+            
 #SCRAP AREA
 """
  def query_json3(self, query=None):

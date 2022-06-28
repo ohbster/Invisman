@@ -46,8 +46,12 @@ def get_products(): #*************TODO: Handle this in backend and call it from 
 
 #Front End
 
-@app.route(PRODUCT_LIST_ROUTE)
+@app.route('/products_gridjs')
 def list_products():
+    return render_template('ajaxgrid.html')
+
+@app.route(PRODUCT_LIST_ROUTE)
+def OLD__list_products():
     result = get_products()
     fields = controller.get_product_keys() #get all attributes of Product
     return render_template('list_products.html', result=result, fields=fields)
@@ -70,16 +74,16 @@ def update_product(product_id=None):
     #need to pass id to this function
     form_data = request.form
     controller.set_product(product_id=product_id,attrs=form_data)
-    return list_products()
+    return redirect(PRODUCT_LIST_ROUTE)
     
 @app.route('/view_product/<product_id>')
 def view_product(product_id=None):
     #get fields for the update form
     fields = controller.get_product_keys() #Possibly rendundant
-    product = controller.product_get(product_id=product_id)
+    product = controller.get_product(product_id=product_id)
     return render_template('view_product.html',fields=fields, product=product)
 
-@app.route('/api/delete_product/<product_id>')
+@app.route('/delete_product/<product_id>')
 def delete_product(product_id=None):
     controller.delete_product(product_id)
     return redirect(PRODUCT_LIST_ROUTE)

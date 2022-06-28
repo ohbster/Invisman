@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
 <body>
-  <form action="/product_update/{{ product['id'] }}" METHOD="POST">
+  <form id="view_product_form" method="POST">
     {% for key in product %}
       {% if key == 'id' %}
-      <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}" /></p>
+      <p> {{ key }} = <input type= "text" readonly = true name = "{{ key }}" value = "{{ product[key] }}" /></p>
       {% else %}
       <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}"/></p>
       {% endif %}
@@ -14,7 +14,10 @@
       I.E. Table headers
 
     #}
-    <p><input type = "submit" value = "Update" /></p>
+    <p><input type = "submit" value = "Update" formaction = "/update_product/{{ product['id'] }}"/>
+    <input type = "submit" value = "Close" formaction="/products"/ formmethod="get">
+    <input type = "submit" value = "Delete" formaction="/delete_product/{{ product['id'] }}" formmethod="get"/></p>
   </form>
+
 </body>
 </html>

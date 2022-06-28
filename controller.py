@@ -13,6 +13,9 @@ class Controller(object):
     def query_json(self, query=None):
         return self.model.query_json(query)
     
+    def object_as_dict(self, obj=None):
+        return self.model.object_as_dict(obj)
+    
     #****************************
     #Product Functions
     #

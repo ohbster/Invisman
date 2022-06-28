@@ -29,14 +29,7 @@ tr:nth-child(odd) {
 	<form action="/add_product" method="GET">
 		<input type='submit' value='add'/>
 	</form></td>
-	<td>
-	<form action="/delete_product" method="POST">
-		<input type='submit' value='delete'/>
-	</form></td>
-	<td>
-	<form action="/update_product" method="GET">
-		<input type='submit' value='update'/>
-	</form></td>
+
 </tr></table>
 <table border = 0>
 	{% for field in fields %}
@@ -52,7 +45,9 @@ tr:nth-child(odd) {
 </tr>
 {% for row in result['data'] %}
 <tr>
-	<td> {{ row.id }} </td>
+	<td>
+    <a href="view_product/{{ row.id }}">{{ row.id }}</a>
+  </td>
 	<td> {{ row.name }} </td>
 	<td> {{ row.description }} </td>
 	<td> {{ row.image }} </td>

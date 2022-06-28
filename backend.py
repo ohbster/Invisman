@@ -37,6 +37,17 @@ class Model():
         else:
             return None
     
+    def add_entity(self,model=None, new_entity=None):
+        session.add(new_entity)
+        session.commit()
+    
+    def get_entity(self,model=None,entity_id=None):
+        entity = session.query(model).get(entity_id)
+        return self.object_as_dict(entity)
+    
+    def get_entity_keys(self,model=None):
+        keys = inspect(model).all_orm_descriptors.keys()
+        return keys
     #****************************
     #Product Functions
     #
@@ -45,9 +56,8 @@ class Model():
     #Create
     
     @dispatch(Product)
-    def add_product(self, product_new=None):
-        session.add(product_new)
-        session.commit()
+    def add_product(self, new_product=None):
+        self.add_entity(Product,new_product)
     
     @dispatch(dict)
     def add_product(self, product_dict=None):
@@ -61,16 +71,14 @@ class Model():
     
     #@dispatch(int)
     def get_product(self, product_id=None):
-        product = session.query(Product).get(product_id)
-        return self.object_as_dict(product)
+        return self.get_entity(Product,product_id)
     
     def get_products(self):
         #return self.model.get_products()
         pass
     
     def get_product_keys(self):
-        keys = inspect(Product).all_orm_descriptors.keys()
-        return keys
+        return self.get_entity_keys(Product)
 
     def get_unlisted_products(self, store_id):
         #return self.model.get_unlisted_products(store_id)
