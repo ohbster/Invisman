@@ -139,6 +139,8 @@ class Model():
         #return self.model.get_stores()
         pass
     
+    def get_store_keys(self):
+        return self.get_entity_keys(Store)
     #****************************
     #Quantity Functions
     #

@@ -50,10 +50,28 @@ def get_stores():
     return controller.get_entities(Store)
 
 #Front End
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/api')
+def api():
+    return render_template('api.html')
 
 @app.route('/products_gridjs')
 def list_products():
     return render_template('ajaxgrid.html')
+
+@app.route(STORE_LIST_ROUTE)
+def OLD__list_stores():
+    result = get_stores()
+    fields = controller.get_store_keys() #get all attributes of Product
+    return render_template('list_stores.html', result=result, fields=fields) #include an entity type fields to use
+    #only one listing page
 
 @app.route(PRODUCT_LIST_ROUTE)
 def OLD__list_products():

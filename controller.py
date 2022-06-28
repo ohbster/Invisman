@@ -57,6 +57,9 @@ class Controller(object):
     def get_stores(self):
         return self.model.get_stores()
     
+    def get_store_keys(self):
+        return self.model.get_store_keys()
+    
     #****************************
     #Quantity Functions
     #

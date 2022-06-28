@@ -4,12 +4,16 @@ https://github.com/ohbster
 - To install, do:
 ./invisman.sh -iI
 - To run, do:
-./invisman.sh
+./invisman.sh -t
 Then open http://127.0.0.1:5000 in web browser.
 
 - Dependencies: python 3.8+, sqlalchemy, flask, multipledispatch, gridjs
 - Purpose: manage inventory for multiple stores in one dashboard.
 - Goal: Manage inventory from multiple stores (physical and online)
   Manage orders, shipping, replenishing inventory
-  Monitor sales using multiple API's from Amazon, Shopify, Etsy, and invisman and more
+  Monitor sales using multiple API's from Amazon, Shopify, Etsy, and Invisman and more
   Visual aids, charts, and report generating
+- Road Map:
+  - search
+  - pagination
+  - sorting
