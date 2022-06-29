@@ -11,7 +11,7 @@ class Product(Base):
     image = Column(String, nullable = False) 
     description = Column(String(500)) 
     msrp = Column(Float, nullable = False)  
-    active = Column(Boolean, nullable = False)
+    #active = Column(Boolean, nullable = False)
     
 class Store(Base):
     __tablename__ = 'stores'
