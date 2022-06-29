@@ -69,15 +69,15 @@ def list_products():
 @app.route(STORE_LIST_ROUTE)
 def OLD__list_stores():
     result = get_stores()
-    fields = controller.get_store_keys() #get all attributes of Product
-    return render_template('list_stores.html', result=result, fields=fields) #include an entity type fields to use
+    keys = controller.get_store_keys() #get all attributes of Product
+    return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
     #only one listing page
 
 @app.route(PRODUCT_LIST_ROUTE)
 def OLD__list_products():
     result = get_products()
-    fields = controller.get_product_keys() #get all attributes of Product
-    return render_template('list_products.html', result=result, fields=fields)
+    keys = controller.get_product_keys() #get all attributes of Product
+    return render_template('list_entity.html', result=result, keys=keys, entity='product')
 
 @app.route('/add_product', methods=['GET'])
 def product_new():
