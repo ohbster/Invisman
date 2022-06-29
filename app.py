@@ -79,6 +79,9 @@ def OLD__list_products():
     keys = controller.get_product_keys() #get all attributes of Product
     return render_template('list_entity.html', result=result, keys=keys, entity='product')
 
+#Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
+#I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
+#should only allow numerical input. Longer strings may need require a multiline text area. 
 @app.route('/add_product', methods=['GET'])
 def product_new():
     #to return product keys as json.
