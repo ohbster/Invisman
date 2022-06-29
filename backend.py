@@ -37,7 +37,7 @@ class Model():
         else:
             return None
     
-    @dispatch(Product)
+    #@dispatch(Product)
     def add_entity(self,model=None, new_entity=None):
         session.add(new_entity)
         session.commit()

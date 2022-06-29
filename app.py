@@ -82,8 +82,8 @@ def OLD__list_products():
 @app.route('/add_product', methods=['GET'])
 def product_new():
     #to return product keys as json.
-    fields = controller.get_product_keys()
-    return render_template('add_product.html', fields=fields)
+    keys = controller.get_product_keys()
+    return render_template('add_product.html', keys=keys)
 
 #The Below function can add a product_new (or any ORM object) to database, and allows for change in schema.
 @app.route('/add_product', methods=['POST'])
@@ -101,10 +101,8 @@ def update_product(product_id=None):
     
 @app.route('/view_product/<product_id>')
 def view_product(product_id=None):
-    #get fields for the update form
-    fields = controller.get_product_keys() #Possibly rendundant
     product = controller.get_product(product_id=product_id)
-    return render_template('view_product.html',fields=fields, product=product)
+    return render_template('view_product.html', product=product)
 
 @app.route('/delete_product/<product_id>')
 def delete_product(product_id=None):

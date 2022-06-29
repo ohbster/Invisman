@@ -1,6 +1,5 @@
 from tester import *
 from faker import Faker
-from itertools import product_new
 #initialze database
 fake = Faker()
 
@@ -20,7 +19,9 @@ def add_products():
             name = fake.name(),
             description = fake.paragraph(nb_sentences = 3),
             image = fake.file_name(category='image'),
-            msrp = 19.95
+            msrp = 19.95,
+            sku = fake.msisdn(),
+            active = True
             #msrp = fake.pricetag(),
             )
         session.add(product_new)

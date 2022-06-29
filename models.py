@@ -6,10 +6,12 @@ from database import Base
 class Product(Base):
     __tablename__= 'products'
     id = Column(Integer, primary_key = True, nullable = False)
+    sku = Column(String, unique = True)
     name = Column(String, nullable = False)
     image = Column(String, nullable = False) 
     description = Column(String(500)) 
     msrp = Column(Float, nullable = False)  
+    active = Column(Boolean, nullable = False)
     
 class Store(Base):
     __tablename__ = 'stores'

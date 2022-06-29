@@ -2,10 +2,10 @@
 <html>
 <body>
   <form action="add_product" METHOD="POST">
-    {% for field in fields %}
-      {% if field == 'id' %}
+    {% for key in keys %}
+      {% if key == 'id' %}
       {% else %}
-    <p>{{ field }} = <input type= "text" name = "{{ field }}"/></p>
+    <p>{{ key }} = <input type= "text" name = "{{ key }}"/></p>
       {% endif %}
     {% endfor %}
 
