@@ -83,12 +83,12 @@ def OLD__list_products():
 #I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
 #should only allow numerical input. Longer strings may need require a multiline text area. 
 @app.route('/add_product', methods=['GET'])
-def product_new():
+def new_product():
     #to return product keys as json.
     keys = controller.get_product_keys()
     return render_template('add_product.html', keys=keys)
 
-#The Below function can add a product_new (or any ORM object) to database, and allows for change in schema.
+#The Below function can add a new_product (or any ORM object) to database, and allows for change in schema.
 @app.route('/add_product', methods=['POST'])
 def add_product():
     form_data = request.form

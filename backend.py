@@ -105,7 +105,7 @@ class Model():
                     if c.key == 'id': #ignore id key as this is assigned by database, not form data
                         pass
                     elif str(c.type) == 'BOOLEAN':
-                        if c.key == 'True':
+                        if attrs[c.key] == 'True':
                             setattr(obj, c.key, True)
                         else:# c.key == 'False':
                             setattr(obj, c.key, False) 

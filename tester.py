@@ -101,6 +101,13 @@ def test_get_key_type():
         print(f"column: {x.key} type: {x.type}")
     return controller.entity_properties(Product)
 
+@app.route('/test/server_gridjs')
+def test_server_gridjs():
+    result = get_products()
+    keys = controller.get_product_keys() #get all attributes of Product
+    return render_template('servergridjs.html', result=result, keys=keys, entity='product')
+    
+
 #SCRAP AREA
 """
  def query_json3(self, query=None):

@@ -2,29 +2,7 @@
 <html>
 <body>
   <form id="view_product_form" method="POST">
-    {% for key in product %}
-      {% if key == 'id' %}
-      <p> {{ key }} = <input type= "text" readonly = true name = "{{ key }}" value = "{{ product[key] }}" /></p>
-      {% elif properties[key] == "BOOLEAN" %}
-      {# <p> {{ key }} = <input type= "checkbox" name = "{{ key }}" value = 1 /></p> #}
-      <p> {{ key }} = <select name="{{ key }}" id=" {{ key }}">
-        <option value='True'>True</option>
-        <option value='False'>False</option>
-      </select>
-
-      {% elif properties[key] == "FLOAT" %}
-      <p> {{ key }} = <input type="number" step=0.01 name="{{ key }}" placeholder="Value greater than 0" value="{{ product[key] }}"/></p>
-      {% elif properties[key] == "INTEGER" %}
-      <p> {{ key }} = <input type="number" step=1 name="{{ key }}" placeholder="Value greater than 0" value="{{ product[key] }}"/></p>
-      {% else %}
-      <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}"/></p>
-      {% endif %}
-    {% endfor %}
-
-    {# Find a way to parameterize the above code so that it can be reused.
-      I.E. Table headers
-
-    #}
+    {% include 'dataloader.html' %}
     <p><input type = "submit" value = "Update" formaction = "/update_product/{{ product['id'] }}"/>
     <input type = "submit" value = "Close" formaction="/products"/ formmethod="get">
     <input type = "submit" value = "Delete" formaction="/delete_product/{{ product['id'] }}" formmethod="get"/></p>

@@ -1,0 +1,24 @@
+{% for key in product %}
+  {% if key == 'id' %}
+  <p> {{ key }} = <input type= "text" readonly = true name = "{{ key }}" value = "{{ product[key] }}" /></p>
+  {% elif properties[key] == "BOOLEAN" %}
+  {# <p> {{ key }} = <input type= "checkbox" name = "{{ key }}" value = 1 /></p> #}
+  <p> {{ key }} = <select name="{{ key }}" id="{{ key }}">
+    <option value='False'>False</option>
+    <option value='True'>True</option>
+  </select>
+  {% if product[key] == True %}
+  <script>
+    sel = document.getElementById('{{ key }}');
+    sel.selectedIndex = 1;
+  </script>
+  {% endif %}
+
+  {% elif properties[key] == "FLOAT" %}
+  <p> {{ key }} = <input type="number" step=0.01 name="{{ key }}" placeholder="Value greater than 0" value="{{ product[key] }}"/></p>
+  {% elif properties[key] == "INTEGER" %}
+  <p> {{ key }} = <input type="number" step=1 name="{{ key }}" placeholder="Value greater than 0" value="{{ product[key] }}"/></p>
+  {% else %}
+  <p> {{ key }} = <input type= "text" name = "{{ key }}" value = "{{ product[key] }}"/></p>
+  {% endif %}
+{% endfor %}

@@ -1,0 +1,35 @@
+<html>
+<head>
+  <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
+</head>
+    <body>
+      <div id="wrapper"></div>
+      <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+        <!-- <script src="src/index.js"></script> -->
+        <script>
+          new gridjs.Grid({
+            columns: [
+              {% for key in keys %}
+                { id: "{{ key }}", name: "{{ key }}" },
+              {% endfor %}
+
+              {#
+              { id: "id", name: "Id" },
+              { id: "name", name: "Name" },
+              { id: "image", name: "Image" },
+              { id: "description", name: "Description" },
+              { id: "msrp", name: "MSRP" },
+              #}
+          ],
+          server: {
+            url: "/api/products",
+            then: result => result.data,
+          },
+          search: true,
+          sort: true,
+          pagination: true,
+        }).render(document.getElementById('wrapper'));
+        </script>
+    </body>
+</html>

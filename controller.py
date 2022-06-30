@@ -13,8 +13,11 @@ class Controller(object):
     def query_json(self, query=None):
         return self.model.query_json(query)
     
-    def object_as_dict(self, obj=None):
-        return self.model.object_as_dict(obj)
+    def entity_as_dict(self, entity=None):
+        return self.model.entity_as_dict(entity)
+    
+    def entity_properties(self, entity=None):
+        return self.model.entity_properties(entity)
     
     def get_entities(self,model=None):
         return self.model.get_entities(model)
