@@ -7,8 +7,26 @@ from flask import render_template
 from models import *
 import json
 from multipledispatch import dispatch
+from contextlib import contextmanager
+#from app import get_session
 
 session = Session()
+
+#below is attempt to correct sqlalchemy pendingRollbackError that occurs when an
+#attempt is made to update an object with in valid data. This error crashes the app
+#thanks to user zvone @ https://stackoverflow.com/questions/52232979/sqlalchemy-rollback-when-exception
+
+@contextmanager
+def get_session():
+    session = Session()
+    try:
+        yield session
+    except:
+        session.rollback()
+        raise 
+    else:
+        session.commit()
+
 Base.metadata.create_all(engine)
 connection = engine.connect()
 
@@ -21,30 +39,41 @@ class Model():
     #
     #****************************
     
-    #snippet below from:
+    #snippet below inspired by:
     #user SuperShoot @ https://stackoverflow.com/questions/1958219/how-to-convert-sqlalchemy-row-object-to-a-python-dict
-    def object_as_dict(self, obj):
-        return {c.key: getattr(obj, c.key)
-                for c in inspect(obj).mapper.column_attrs}
+    def entity_as_dict(self, entity):
+        return {attribute.key: getattr(entity, attribute.key)
+                for attribute in inspect(entity).mapper.column_attrs}
+        
+    def entity_properties(self, entity):
+        return {str(attribute.key) : str(attribute.type)
+                for attribute in inspect(entity).columns}
+    
 
     def query_json(self, query=None):
         #for item in query(Store).all():
         if query is not None:
             data = {'data':[]}
             for row in query:
-                data['data'].append(self.object_as_dict(row))
+                data['data'].append(self.entity_as_dict(row))
             return json.dumps(data)
         else:
             return None
     
     #@dispatch(Product)
-    def add_entity(self,model=None, new_entity=None):
-        session.add(new_entity)
-        session.commit()
+    #this function was made redundant by set_entity    
+    # def add_entity(self, new_entity=None):
+    #     with get_session() as session:
+    #         try:
+    #             session.add(new_entity)
+    #         except:
+    #             session.rollback()
+    #         else: 
+    #             session.commit()
     
     def get_entity(self,model=None,entity_id=None):
         entity = session.query(model).get(entity_id)
-        return self.object_as_dict(entity)
+        return self.entity_as_dict(entity)
     
     def get_entities(self,model=None):
         result = self.query_json(session.query(model).all())
@@ -61,14 +90,36 @@ class Model():
         return keys
     
     def set_entity(self,model=None,entity_id=None,attrs=None):
-        #allowing a user to overwrite products by altering request
-        obj = session.query(model).get(entity_id) 
-        
-        #This mesthod is dangerous. Should not allow user to write the ID key.
-        for key in attrs: #for each attribute in the attrs list, assign its value to the product_new
-            if key != 'id': #skip id!
-                setattr(obj, key, attrs[key])
-        session.commit()
+        with get_session() as session:
+            try:
+                #check if entity_id is None. if so, adding a new object
+                if entity_id is None:
+                    obj = model()
+                else:
+                #allowing a user to overwrite products by altering request
+                    obj = session.query(model).get(entity_id) 
+            
+                #This mesthod is dangerous. Should not allow user to write the ID key.
+                for c in inspect(obj).mapper.columns:
+                    #if c.key != 'id': #ignore id key as this is assigned by database, not form data
+                    if c.key == 'id': #ignore id key as this is assigned by database, not form data
+                        pass
+                    elif str(c.type) == 'BOOLEAN':
+                        if c.key == 'True':
+                            setattr(obj, c.key, True)
+                        else:# c.key == 'False':
+                            setattr(obj, c.key, False) 
+                    else:
+                        setattr(obj,c.key, attrs[c.key]) #assign the form data to the object's respective attribute
+                       
+                #check again if entity_id is None. If so, add the new object then commit
+                if entity_id is None:
+                    session.add(obj)
+            except:
+                session.rollback()
+            else:
+                #for an add this happens twice. avoid that
+                session.commit()
     #****************************
     #Product Functions
     #
@@ -78,15 +129,25 @@ class Model():
     
     @dispatch(Product)
     def add_product(self, new_product=None):
-        self.add_entity(Product,new_product)
+        self.add_entity(new_product)
     
     @dispatch(dict)
     def add_product(self, product_dict=None):
-        obj = Product()
-        for c in inspect(obj).mapper.column_attrs:
-            if c.key != 'id': #ignore id key as this is assigned by database, not form data
-                setattr(obj,c.key, product_dict[c.key]) #assign the form data to the object's respective attribute
-        self.add_product(obj)
+        #obj = Product()
+        self.set_entity(Product, None, product_dict)
+        #for c in inspect(obj).mapper.column_attrs:
+        # for c in inspect(obj).mapper.columns:
+        #     #if c.key != 'id': #ignore id key as this is assigned by database, not form data
+        #     if c.key == 'id': #ignore id key as this is assigned by database, not form data
+        #         pass
+        #     elif str(c.type) == 'BOOLEAN':
+        #         if c.key == 'True':
+        #             setattr(obj, c.key, True)
+        #         elif c.key == 'False':
+        #             setattr(obj, c.key, False) 
+        #     else:
+        #         setattr(obj,c.key, product_dict[c.key]) #assign the form data to the object's respective attribute
+        # self.add_product(obj)
     
     #Read
     

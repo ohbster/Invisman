@@ -9,13 +9,13 @@ from backend import Model
 from view import View
 from view import *
 import json
+
  
 model = Model()
 view = View()
 controller = Controller(_model=model, _view=view)
 view.set_controller(controller)
-
-session = Session()
+#session = Session()
 Base.metadata.create_all(engine)
 connection = engine.connect()
 
@@ -105,7 +105,8 @@ def update_product(product_id=None):
 @app.route('/view_product/<product_id>')
 def view_product(product_id=None):
     product = controller.get_product(product_id=product_id)
-    return render_template('view_product.html', product=product)
+    properties = controller.entity_properties(Product)
+    return render_template('view_product.html', product=product, properties=properties)
 
 @app.route('/delete_product/<product_id>')
 def delete_product(product_id=None):

@@ -94,6 +94,13 @@ def gridjs_ajax():
     fields = controller.get_product_keys()
     return render_template('ajaxgrid.html')
             
+@app.route('/test/keytype')
+def test_get_key_type():
+    insp = inspect(Product)
+    for x in insp.columns:
+        print(f"column: {x.key} type: {x.type}")
+    return controller.entity_properties(Product)
+
 #SCRAP AREA
 """
  def query_json3(self, query=None):
