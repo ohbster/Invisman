@@ -41,9 +41,11 @@ class Model():
     
     #snippet below inspired by:
     #user SuperShoot @ https://stackoverflow.com/questions/1958219/how-to-convert-sqlalchemy-row-object-to-a-python-dict
-    def entity_as_dict(self, entity):
-        return {attribute.key: getattr(entity, attribute.key)
-                for attribute in inspect(entity).mapper.column_attrs}
+    
+    #TODO: Rename this
+    def row_as_dict(self, row):
+        return {attribute.key: getattr(row, attribute.key)
+                for attribute in inspect(row).mapper.column_attrs}
         
     def entity_properties(self, entity):
         return {str(attribute.key) : str(attribute.type)
@@ -54,7 +56,7 @@ class Model():
         if query is not None:
             data = {'data':[]}
             for row in query:
-                data['data'].append(self.entity_as_dict(row))
+                data['data'].append(self.row_as_dict(row))
             return json.dumps(data)
         else:
             return None
@@ -72,7 +74,7 @@ class Model():
     
     def get_entity(self,model=None,entity_id=None):
         entity = session.query(model).get(entity_id)
-        return self.entity_as_dict(entity)
+        return self.row_as_dict(entity)
     
     def get_entities(self,model=None):
         result = self.query_json(session.query(model).all())
@@ -84,9 +86,13 @@ class Model():
         #         'response': '200',
         #         }]}
     
-    def get_entity_keys(self,model=None):
-        keys = inspect(model).all_orm_descriptors.keys()
-        return keys
+    
+    def get_entity_keys(self,model=None): 
+        return [str(attribute.key)
+        for attribute in inspect(model).columns]
+        #This returned relationships as well. caused problems. 
+        # keys = inspect(model).all_orm_descriptors.keys()
+        # return keys
     
     def set_entity(self,model=None,entity_id=None,attrs=None):
         with get_session() as session:

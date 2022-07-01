@@ -115,6 +115,39 @@ def test_get_inventory():
     result = controller.get_inventory(1)
     return json.loads(result)
 
+@app.route('/test/subqueries')
+def test_sub_queries():
+    pass
+
+@app.route('/test/relationship')
+def test_inventory_store():
+    query = session.query(Inventory).filter_by(store_id=1).first()
+    if query is not None:
+        result = query.store
+        result = controller.row_as_dict(result)
+        #return json.loads(result)
+        return result
+    else:
+        return { 'body': [{'response':'200'},
+                          {'message':'No rows returned'}]}
+        
+def new_get_entity_keys():
+    return [str(attribute.key)
+        for attribute in inspect(Inventory).columns]
+
+@app.route('/test/newkeys')
+def test_get_entity_keys():
+    data = {'data':[]}
+    result1 = controller.get_inventory_keys()
+    result2 = new_get_entity_keys()
+    
+    data['data'].append(result1)
+    data['data'].append(result2)
+    
+    
+    return data
+    
+
     
 #SCRAP AREA
 """

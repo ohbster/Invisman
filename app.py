@@ -21,35 +21,28 @@ connection = engine.connect()
 
 app = Flask(__name__)
 
-#These variables make it easier to 
+#These variables make it easier to redirect
 PRODUCT_LIST_ROUTE = '/products'
 STORE_LIST_ROUTE = '/stores'
+
 #****************************
-#Product Routes
+#API Routes
 #
 #****************************
-
-#API calls
 
 @app.route('/api/products', methods=['GET'])
 def get_products(): #*************TODO: Handle this in backend and call it from controller
     return controller.get_entities(Product)
-    # result = controller.query_json(session.query(Product).all())
-    # if result is not None:
-    #     return json.loads(result)
-    # if result is not None:
-    #     return result
-    # else:
-    #     return {'body':[{
-    #         'message' : 'No results', 
-    #         'response' : '200',
-    #         }]}
         
 @app.route('/api/stores')
 def get_stores():
     return controller.get_entities(Store)
 
-#Front End
+#****************************
+#Front-end Functions
+#
+#****************************
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -62,22 +55,21 @@ def home():
 def api():
     return render_template('api.html')
 
+#****************************
+#Product Functions
+#
+#****************************
+
 @app.route('/products_gridjs')
 def list_products():
     return render_template('ajaxgrid.html')
-
-@app.route(STORE_LIST_ROUTE)
-def OLD__list_stores():
-    result = get_stores()
-    keys = controller.get_store_keys() #get all attributes of Product
-    return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
-    #only one listing page
 
 @app.route(PRODUCT_LIST_ROUTE)
 def OLD__list_products():
     result = get_products()
     keys = controller.get_product_keys() #get all attributes of Product
     return render_template('list_entity.html', result=result, keys=keys, entity='product')
+
 
 #Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
 #I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
@@ -112,3 +104,43 @@ def view_product(product_id=None):
 def delete_product(product_id=None):
     controller.delete_product(product_id)
     return redirect(PRODUCT_LIST_ROUTE)
+
+#****************************
+#Store Functions
+#
+#****************************
+
+@app.route(STORE_LIST_ROUTE)
+def OLD__list_stores():
+    result = get_stores()
+    keys = controller.get_store_keys() #get all attributes of Product
+    return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
+    #only one listing page
+
+@app.route('/view_store/<store_id>')
+def view_store(store_id=None):
+    return redirect(f'/{store_id}/inventory') #clicking on a store immediately lists its inventory
+
+#****************************
+#Inventory Functions
+#
+#****************************
+
+@app.route('/<store_id>/inventory')
+def OLD__list_inventory(store_id=None):
+    result = controller.get_inventory(store_id)
+    #print(f'result = {result}')
+    keys = controller.get_inventory_keys()
+    return render_template('list_inventory.html', result=result, keys=keys, store_id=store_id, entity='inventory')
+
+@app.route('/<store_id>/add_inventory')
+def new_inventory(store_id=None):
+    keys = controller.get_inventory_keys()
+    return render_template('add_inventory.html',keys=keys,store_id=store_id)
+
+@app.route('/<store_id>/add_inventory',methods=['POST'])
+def add_inventory(store_id=None):
+    form_data = request.form
+    controller.add_inventory(form_data)
+    return redirect(f'/{store_id}/inventory')
+    
