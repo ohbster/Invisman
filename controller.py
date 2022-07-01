@@ -79,6 +79,22 @@ class Controller(object):
         
     def set_quantity(self, product_id = None, store_id = None, quantity = None):
         self.model.set_quantity(product_id, store_id, quantity)
+        
+    #****************************
+    #Inventory Functions
+    #
+    #****************************
+    def add_inventory(self,inventory_dict=None):
+        return self.model.add_inventory(inventory_dict)
+        
+    def get_inventory_keys(self):
+        return self.model.get_inventory_keys()
+    
+    def get_inventory(self, store_id=None):
+        return self.model.get_inventory(store_id)
+    
+    def get_inventories(self):
+        return self.model.get_inventories()
     
     #****************************
     #Relationship Functions

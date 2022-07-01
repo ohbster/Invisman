@@ -4,11 +4,12 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='invisman_style.css') }}">
 </head>
 <body>
-  <form action="add_product" METHOD="POST">
+  <form action="add_inventory" METHOD="POST">
     {% for key in keys %}
-      {% if key == 'id' %}
+      {% if key == 'store_id' %}
+        <p>{{ key }}: <input type = "text" name = "{{ key }}" value = "{{ store_id }}" readonly/></p>
       {% else %}
-    <p>{{ key }} = <input type= "text" name = "{{ key }}"/></p>
+        <p>{{ key }} = <input type = "text" name = "{{ key }}"/></p>
       {% endif %}
     {% endfor %}
 

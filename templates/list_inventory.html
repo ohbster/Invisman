@@ -1,3 +1,4 @@
+{# Try to turn this into a one size fits all solution for similar relationship tables #}
 <!doctype html>
 <html>
 <head>
@@ -6,12 +7,14 @@
 <body>
 	<table>
 		<tr>
+			<th>Store No: {{ store_id }} Inventory Manager </th>
 			<td>
-	<form action="/add_{{ entity }}" method="GET">
+	<form action="/{{ store_id }}/add_{{ entity }}" method="GET">
 		<input type='submit' value='add'/>
 	</form></td>
+
 </tr></table>
-{% include 'table_loader.html' %}
+{% include 'table_loader_inventory.html' %}
 
 </body>
 </html>

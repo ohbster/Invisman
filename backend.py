@@ -48,7 +48,6 @@ class Model():
     def entity_properties(self, entity):
         return {str(attribute.key) : str(attribute.type)
                 for attribute in inspect(entity).columns}
-    
 
     def query_json(self, query=None):
         #for item in query(Store).all():
@@ -101,7 +100,6 @@ class Model():
             
                 #This mesthod is dangerous. Should not allow user to write the ID key.
                 for c in inspect(obj).mapper.columns:
-                    #if c.key != 'id': #ignore id key as this is assigned by database, not form data
                     if c.key == 'id': #ignore id key as this is assigned by database, not form data
                         pass
                     elif str(c.type) == 'BOOLEAN':
@@ -133,21 +131,7 @@ class Model():
     
     @dispatch(dict)
     def add_product(self, product_dict=None):
-        #obj = Product()
         self.set_entity(Product, None, product_dict)
-        #for c in inspect(obj).mapper.column_attrs:
-        # for c in inspect(obj).mapper.columns:
-        #     #if c.key != 'id': #ignore id key as this is assigned by database, not form data
-        #     if c.key == 'id': #ignore id key as this is assigned by database, not form data
-        #         pass
-        #     elif str(c.type) == 'BOOLEAN':
-        #         if c.key == 'True':
-        #             setattr(obj, c.key, True)
-        #         elif c.key == 'False':
-        #             setattr(obj, c.key, False) 
-        #     else:
-        #         setattr(obj,c.key, product_dict[c.key]) #assign the form data to the object's respective attribute
-        # self.add_product(obj)
     
     #Read
     
@@ -162,10 +146,6 @@ class Model():
     def get_product_keys(self):
         return self.get_entity_keys(Product)
 
-    def get_unlisted_products(self, store_id):
-        #return self.model.get_unlisted_products(store_id)
-        pass
-    
     #Updates
  
     @dispatch(str,dict)
@@ -202,10 +182,42 @@ class Model():
     
     def get_store_keys(self):
         return self.get_entity_keys(Store)
+    
     #****************************
-    #Quantity Functions
+    #Inventory Functions
     #
     #****************************
+    
+    def add_inventory(self, inventory_dict):
+        self.set_entity(Inventory, None, inventory_dict)
+    
+    def get_inventory(self, store_id):
+        #return all inventory for store_id
+        #Try to handle this by overloading get entities using a "filter" argument. I.e. "store_id=<store_id>"
+        query = session.query(Inventory).filter_by(store_id=store_id)
+        result = self.query_json(query)
+        return json.loads(result)
+    
+    def get_inventories(self):
+        return self.get_entities(Inventory)
+    
+    def get_inventory_keys(self):
+        return self.get_entity_keys(Inventory)
+    
+    def get_unlisted_products(self, store_id):
+        subquery1 = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
+        result = session.query(Product).filter(Product.id.in_(subquery1) )
+        #result = session.query(Product.id).
+        #Get all products where product_id is not in 
+        ######(select all product_id from inventory where store_id = <store_id>)
+        pass
+    
+    def get_listed_products(self, store_id):
+        #This is reduntant: get_inventory(store_id) does this
+        subquery1 = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
+        result = session.query(Product).filter(Product.id.in_(subquery1) )
+        
+        return result
     
     # def add_quantity(self,product_id=None, store_id=None, quantity=None):
     #     #return self.model.add_quantity(product_id, store_id, quantity)

@@ -21,7 +21,7 @@ def add_products():
             image = fake.file_name(category='image'),
             msrp = 19.95,
             sku = fake.msisdn(),
-            active = True
+            #active = True
             #msrp = fake.pricetag(),
             )
         session.add(product_new)

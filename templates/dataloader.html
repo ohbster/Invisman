@@ -2,7 +2,6 @@
   {% if key == 'id' %}
   <p> {{ key }} = <input type= "text" readonly = true name = "{{ key }}" value = "{{ product[key] }}" /></p>
   {% elif properties[key] == "BOOLEAN" %}
-  {# <p> {{ key }} = <input type= "checkbox" name = "{{ key }}" value = 1 /></p> #}
   <p> {{ key }} = <select name="{{ key }}" id="{{ key }}">
     <option value='False'>False</option>
     <option value='True'>True</option>

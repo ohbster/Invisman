@@ -1,0 +1,29 @@
+<table border = 0> {# Create the table header using entity attributes #}
+	{# Table Header #}
+	{% for key in keys %}
+		{% if key != 'store_id' %}
+
+	  	<th>{{ key }}</th>
+		{% endif %}
+	{% endfor %}
+
+  {# for each row, print records 'id' and use it as a link to view it. #}
+{% for row in result['data'] %}
+<tr>
+
+  {# for each column, print the remaining attributes, skipping 'id' #}
+  {% for key, value in row.items() %}
+    {% if key != 'store_id' %}
+			{% if key == 'product_id' %}
+				<td>
+				<a href="/view_product/{{ row.product_id }}" target="_blank" >{{row.product_id}}</a>
+				</td>
+			{% else %}
+	  	<td> {{ value }} </td>
+			{% endif %}
+    {% endif %}
+  {% endfor %}
+</tr>
+{% endfor %}
+
+</table>

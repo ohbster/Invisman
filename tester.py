@@ -2,7 +2,10 @@ from app import *
 import requests
 from flask import jsonify
 from sqlalchemy import inspect
+from backend import get_session
+from backend import session
 
+#session = get_session()
 controller = view.get_controller()
 
 @app.route('/api/test_get_store')
@@ -60,15 +63,15 @@ def test_list_products():
     result = json.loads(response.text)
     return render_template('list_products.html', result=result)
 
-@app.route('/api/test_product_update')
+@app.route('/test/product_update')
 def test_product_update():
     return controller.get_product(3)
 
-@app.route('/api/test_product_get')
+@app.route('/test/get_product')
 def test_product_get():
     return controller.get_product(1)
 
-@app.route('/api/test_delete/<product_id>')
+@app.route('/test/delete/<product_id>')
 def test_delete_product(product_id=None):
     return delete_product(product_id)
 
@@ -106,8 +109,13 @@ def test_server_gridjs():
     result = get_products()
     keys = controller.get_product_keys() #get all attributes of Product
     return render_template('servergridjs.html', result=result, keys=keys, entity='product')
-    
 
+@app.route('/test/get_inventory')
+def test_get_inventory():
+    result = controller.get_inventory(1)
+    return json.loads(result)
+
+    
 #SCRAP AREA
 """
  def query_json3(self, query=None):

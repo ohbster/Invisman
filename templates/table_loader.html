@@ -1,0 +1,18 @@
+<table border = 0> {# Create the table header using entity attributes #}
+	{% include 'table_loader/table_header.html' %}
+  {# for each row, print records 'id' and use it as a link to view it. #}
+{% for row in result['data'] %}
+<tr>
+	<td>
+    <a href="view_{{ entity }}/{{ row.id }}">{{ row.id }}</a>
+  </td>
+  {# for each column, print the remaining attributes, skipping 'id' #}
+  {% for key, value in row.items() %}
+    {% if key != 'id' %}
+  <td> {{ value }} </td>
+    {% endif %}
+  {% endfor %}
+</tr>
+{% endfor %}
+
+</table>
