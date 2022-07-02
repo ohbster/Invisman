@@ -1,6 +1,6 @@
 from app import *
 import requests
-from flask import jsonify
+from flask import jsonify, request
 from sqlalchemy import inspect
 from backend import get_session
 from backend import session
@@ -143,11 +143,32 @@ def test_get_entity_keys():
     
     data['data'].append(result1)
     data['data'].append(result2)
-    
-    
+
     return data
     
-
+@app.route('/test/string_queries')
+def test_string_queries():
+    result = request.args
+    if request is None:
+        return {'body':[
+            {'status':'200'},
+            {'message':'No arguements given'}
+            ]}
+    for key in result:
+        print(f"{key} = {result[key]}")
+    
+    return result
+@app.route('/test/products')
+def test_filters():
+    key_value_pairs = request.args
+    direction = request.args.get('direction')
+    sort = request.args.get('sort')
+    
+    #return controller.get_entities(Product)
+    return controller.product_query(key_value_pairs,sort,direction)
+@app.route('/test/product_query')
+def test_product_query():
+    pass
     
 #SCRAP AREA
 """

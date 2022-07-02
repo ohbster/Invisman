@@ -10,6 +10,9 @@ class Controller(object):
     #Common Functions
     #
     #****************************
+    def query(self, model=None, args=None, sort=None, direction='asc'):
+        return self.model.query(self, model=None, args=None, sort=None, direction='asc')
+    
     def query_json(self, query=None):
         return self.model.query_json(query)
     
@@ -48,6 +51,8 @@ class Controller(object):
     def delete_product(self, product_id=None):
         return self.model.delete_product(product_id)
     
+    def product_query(self,args=None, sort=None, direction=None):
+        return self.model.product_query(args,sort,direction)
     #****************************
     #Store Functions
     #

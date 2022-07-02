@@ -33,7 +33,6 @@ connection = engine.connect()
 app = Flask(__name__)
 
 class Model():
-    
     #****************************
     #Common Functions
     #
@@ -93,6 +92,16 @@ class Model():
         #This returned relationships as well. caused problems. 
         # keys = inspect(model).all_orm_descriptors.keys()
         # return keys
+        
+    def query(self, model=None, args=None, sort=None, direction=None):
+        keys = self.get_entity_keys(model)
+        filter = {arg:args[arg]
+        for arg in args
+            if arg in keys}
+        
+        #return filter
+        query = session.query(model).filter_by(**filter).all()
+        return json.loads(self.query_json(query))
     
     def set_entity(self,model=None,entity_id=None,attrs=None):
         with get_session() as session:
@@ -165,6 +174,8 @@ class Model():
         session.query(Product).filter_by(id=product_id).delete()
         session.commit()   
         
+    def product_query(self, args=None, sort=None, direction=None):
+        return self.query(Product,args,sort,direction)
     #****************************
     #Store Functions
     #
