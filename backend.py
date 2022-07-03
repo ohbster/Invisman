@@ -95,12 +95,26 @@ class Model():
         
     def query(self, model=None, args=None, sort=None, direction=None):
         keys = self.get_entity_keys(model)
-        filter = {arg:args[arg]
-        for arg in args
-            if arg in keys}
+        # filters = {arg:args[arg]
+        # for arg in args}
+        columns = inspect(model).mapper.columns
+        filters=[]
+        query = session.query(model)
+        for arg in args:
+            if arg in keys: #equality 
+                #filters.append( columns[arg].__eq__(args[arg]))
+                query = query.filter((columns[arg]).__eq__(args[arg]))
+            elif arg == 'lt': #less than
+                query = query.filter((columns[k]).__lt__(v)
+                    for k,v in args[arg].items())
+            elif arg == 'gt': #greater than
+                query = query.filter((columns[arg]).__gt__(args[arg]))
+            
         
-        #return filter
-        query = session.query(model).filter_by(**filter).all()
+        #return filters
+        #query = session.query(model).filter_by(**filters).all()
+        #query = session.query(model).filter(filters).all()
+        query = session.query(model).filter((columns['id']).__gt__(20))
         return json.loads(self.query_json(query))
     
     def set_entity(self,model=None,entity_id=None,attrs=None):
@@ -133,6 +147,12 @@ class Model():
             else:
                 #for an add this happens twice. avoid that
                 session.commit()
+                
+    def search(self, model=None, column_list=None, substring=None):
+        for column in column_list:
+            query = session.query(model).column.contain(substring)
+            result = query.all()
+            return json.loads(result)
     #****************************
     #Product Functions
     #
