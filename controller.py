@@ -68,6 +68,9 @@ class Controller(object):
     def get_store_keys(self):
         return self.model.get_store_keys()
     
+    def store_query(self,args=None, sort=None, direction=None):
+        return self.model.store_query(args,sort,direction)
+    
     #****************************
     #Quantity Functions
     #

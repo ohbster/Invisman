@@ -31,12 +31,20 @@ STORE_LIST_ROUTE = '/stores'
 #****************************
 
 @app.route('/api/products', methods=['GET'])
-def get_products(): #*************TODO: Handle this in backend and call it from controller
-    return controller.get_entities(Product)
+def get_products(): 
+    key_value_pairs = request.args
+    direction = request.args.get('direction')
+    sort = request.args.get('sort')
+    return controller.product_query(key_value_pairs,sort,direction)
+    #return controller.get_entities(Product)
         
 @app.route('/api/stores')
 def get_stores():
-    return controller.get_entities(Store)
+    key_value_pairs = request.args
+    direction = request.args.get('direction')
+    sort = request.args.get('sort')
+    return controller.product_query(key_value_pairs,sort,direction)
+    #return controller.get_entities(Store)
 
 #****************************
 #Front-end Functions

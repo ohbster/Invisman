@@ -94,27 +94,25 @@ class Model():
         # return keys
         
     def query(self, model=None, args=None, sort=None, direction=None):
+        #TODO: This works, but looks sloppy. Try to clean this up
         keys = self.get_entity_keys(model)
-        # filters = {arg:args[arg]
-        # for arg in args}
         columns = inspect(model).mapper.columns
-        filters=[]
         query = session.query(model)
         for arg in args:
             if arg in keys: #equality 
-                #filters.append( columns[arg].__eq__(args[arg]))
-                query = query.filter((columns[arg]).__eq__(args[arg]))
+                query = query.filter((columns[arg])==(args[arg]))
             elif arg == 'lt': #less than
-                query = query.filter((columns[k]).__lt__(v)
-                    for k,v in args[arg].items())
+                split_arg = args[arg].split(',')
+                query = query.filter((columns[split_arg[0]])<(split_arg[1]))
             elif arg == 'gt': #greater than
-                query = query.filter((columns[arg]).__gt__(args[arg]))
-            
-        
-        #return filters
-        #query = session.query(model).filter_by(**filters).all()
-        #query = session.query(model).filter(filters).all()
-        query = session.query(model).filter((columns['id']).__gt__(20))
+                split_arg = args[arg].split(',')
+                query = query.filter((columns[split_arg[0]])>(split_arg[1]))
+            elif arg == 'le': #less than or equal
+                split_arg = args[arg].split(',')
+                query = query.filter((columns[split_arg[0]])<=(split_arg[1]))
+            elif arg == 'ge': #greater than or equal
+                split_arg = args[arg].split(',')
+                query = query.filter((columns[split_arg[0]])>=(split_arg[1]))
         return json.loads(self.query_json(query))
     
     def set_entity(self,model=None,entity_id=None,attrs=None):
@@ -220,6 +218,8 @@ class Model():
     def get_store_keys(self):
         return self.get_entity_keys(Store)
     
+    def store_query(self, args=None, sort=None, direction=None):
+        return self.query(Store,args,sort,direction)
     #****************************
     #Inventory Functions
     #
