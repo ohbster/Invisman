@@ -113,8 +113,17 @@ class Model():
             elif arg == 'ge': #greater than or equal
                 split_arg = args[arg].split(',')
                 query = query.filter((columns[split_arg[0]])>=(split_arg[1]))
+                
+        #sorting
+        if sort is not None: #check if sort is a valid key
+            if direction == 'asc':
+                query = query.order_by(columns[sort].asc())
+            elif direction == 'desc':
+                query = query.order_by(columns[sort].desc())
         return json.loads(self.query_json(query))
     
+    def paginate(self, query):
+            
     def set_entity(self,model=None,entity_id=None,attrs=None):
         with get_session() as session:
             try:
