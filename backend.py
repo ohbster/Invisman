@@ -93,7 +93,7 @@ class Model():
         # keys = inspect(model).all_orm_descriptors.keys()
         # return keys
         
-    def query(self, model=None, args=None, sort=None, direction=None):
+    def query(self, model=None, args=None, sort=None, direction=None, paginate=True):
         #TODO: This works, but looks sloppy. Try to clean this up
         keys = self.get_entity_keys(model)
         columns = inspect(model).mapper.columns
@@ -102,7 +102,7 @@ class Model():
             if arg in keys: #equality 
                 query = query.filter((columns[arg])==(args[arg]))
             elif arg == 'lt': #less than
-                split_arg = args[arg].split(',')
+                split_arg = args[arg].split(',') #seperate "key,value" into "key", "value"
                 query = query.filter((columns[split_arg[0]])<(split_arg[1]))
             elif arg == 'gt': #greater than
                 split_arg = args[arg].split(',')
@@ -113,17 +113,31 @@ class Model():
             elif arg == 'ge': #greater than or equal
                 split_arg = args[arg].split(',')
                 query = query.filter((columns[split_arg[0]])>=(split_arg[1]))
-                
         #sorting
         if sort is not None: #check if sort is a valid key
             if direction == 'asc':
                 query = query.order_by(columns[sort].asc())
             elif direction == 'desc':
                 query = query.order_by(columns[sort].desc())
+        #to paginate or not
+        #this bool is used to return raw query in order to paginate with limit
+        #and offset supplied by flask
+        
+        if paginate is True: 
+            #return self.paginate(query,25,0)
+            result = {'query':query, 
+                     'count':query.count()}
+            #return query
+            return result
+        #if paginate is set to false, just return the query as json
+        else:
+            return json.loads(self.query_json(query))
+        
+    def paginate(self, query, limit=None, page=1):
+        offset = (page - 1)* limit
+        query = query.limit(limit).offset(offset)
         return json.loads(self.query_json(query))
-    
-    def paginate(self, query):
-            
+        
     def set_entity(self,model=None,entity_id=None,attrs=None):
         with get_session() as session:
             try:
@@ -201,8 +215,8 @@ class Model():
         session.query(Product).filter_by(id=product_id).delete()
         session.commit()   
         
-    def product_query(self, args=None, sort=None, direction=None):
-        return self.query(Product,args,sort,direction)
+    def query_product(self, args=None, sort=None, direction=None, paginate=True):
+        return self.query(Product,args,sort,direction,paginate)
     #****************************
     #Store Functions
     #

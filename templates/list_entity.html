@@ -10,6 +10,13 @@
 	<form action="/add_{{ entity }}" method="GET">
 		<input type='submit' value='add'/>
 	</form></td>
+	{# test below for out of bounds #}
+	<td><a href="/{{ entity }}s?page={{ page_data.page -1}}">Prev</a>
+	{# Loop insert the page numbers here #}
+	{# Dont leave this like that. need and "action" entry in dictionary #}
+	<a href="/{{ entity }}s?page={{ page_data.page + 1}}">Next</a>
+Total result count = {{ page_data.count}}
+</td>
 </tr></table>
 {% include 'table_loader.html' %}
 

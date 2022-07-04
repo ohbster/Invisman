@@ -35,7 +35,7 @@ def get_products():
     key_value_pairs = request.args
     direction = request.args.get('direction')
     sort = request.args.get('sort')
-    return controller.product_query(key_value_pairs,sort,direction)
+    return controller.query_product(key_value_pairs,sort,direction)
     #return controller.get_entities(Product)
         
 @app.route('/api/stores')
@@ -43,7 +43,7 @@ def get_stores():
     key_value_pairs = request.args
     direction = request.args.get('direction')
     sort = request.args.get('sort')
-    return controller.product_query(key_value_pairs,sort,direction)
+    return controller.query_product(key_value_pairs,sort,direction)
     #return controller.get_entities(Store)
 
 #****************************
@@ -69,15 +69,35 @@ def api():
 #****************************
 
 @app.route('/products_gridjs')
-def list_products():
+def gridjs_list_products():
     return render_template('ajaxgrid.html')
 
 @app.route(PRODUCT_LIST_ROUTE)
-def OLD__list_products():
-    result = get_products()
+def list_products():
+    #this version includes pagination
+    key_value_pairs = request.args #TODO!! omit direction, sort, limit, and page
+    direction = request.args.get('direction')
+    sort = request.args.get('sort')
+    try:
+        limit = int(request.args.get('limit'))
+    except: #limit is None:
+        limit = 25
+    try:
+        page = int(request.args.get('page'))
+    except: # page is None:
+        page = 1
     keys = controller.get_product_keys() #get all attributes of Product
-    return render_template('list_entity.html', result=result, keys=keys, entity='product')
-
+    query = controller.query_product(key_value_pairs,sort,direction,paginate=True)
+    result = controller.paginate(query['query'],limit,page)
+    page_data={'limit':limit,
+               'page':page,
+               'count':query['count']}
+    return render_template('list_entity.html', result=result,keys=keys, entity='product', page_data=page_data)
+    
+    # result = get_products()
+    # keys = controller.get_product_keys() #get all attributes of Product
+    # return render_template('list_entity.html', result=result, keys=keys, entity='product')
+    
 
 #Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
 #I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
@@ -119,7 +139,7 @@ def delete_product(product_id=None):
 #****************************
 
 @app.route(STORE_LIST_ROUTE)
-def OLD__list_stores():
+def list_stores():
     result = get_stores()
     keys = controller.get_store_keys() #get all attributes of Product
     return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use

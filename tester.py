@@ -167,8 +167,8 @@ def test_filters():
     #return key_value_pairs
     #return controller.get_entities(Product)
     print(key_value_pairs)
-    return controller.product_query(key_value_pairs,sort,direction)
-@app.route('/test/product_query')
+    return controller.query_product(key_value_pairs,sort,direction)
+@app.route('/test/query_product')
 def test_product_query():
     pass
     
