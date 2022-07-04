@@ -9,6 +9,7 @@ from backend import Model
 from view import View
 from view import *
 import json
+from math import ceil
 
  
 model = Model()
@@ -89,10 +90,19 @@ def list_products():
     keys = controller.get_product_keys() #get all attributes of Product
     query = controller.query_product(key_value_pairs,sort,direction,paginate=True)
     result = controller.paginate(query['query'],limit,page)
+    total_pages = ceil(query['count'] / limit)
+    #dictionaries to send to template
     page_data={'limit':limit,
                'page':page,
-               'count':query['count']}
-    return render_template('list_entity.html', result=result,keys=keys, entity='product', page_data=page_data)
+               'count':query['count'],
+               'total_pages':total_pages}
+    query_data={'result':result,
+                'keys':keys,
+                'entity':'product',
+                'route':PRODUCT_LIST_ROUTE
+                }
+    #return render_template('list_entity.html', result=result,keys=keys, entity='product', page_data=page_data)
+    return render_template('list_entity.html', query_data=query_data, page_data=page_data)
     
     # result = get_products()
     # keys = controller.get_product_keys() #get all attributes of Product

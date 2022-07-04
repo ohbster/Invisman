@@ -7,15 +7,27 @@
 	<table>
 		<tr>
 			<td>
-	<form action="/add_{{ entity }}" method="GET">
+	<form action="/add_{{ query_data['entity'] }}" method="GET">
 		<input type='submit' value='add'/>
 	</form></td>
+	<td>
 	{# test below for out of bounds #}
-	<td><a href="/{{ entity }}s?page={{ page_data.page -1}}">Prev</a>
+	{% if page_data.page>1 %}
+		<a href="{{ query_data['route'] }}?page={{ page_data.page -1}}">Prev</a>
+	{% endif %}
 	{# Loop insert the page numbers here #}
-	{# Dont leave this like that. need and "action" entry in dictionary #}
-	<a href="/{{ entity }}s?page={{ page_data.page + 1}}">Next</a>
-Total result count = {{ page_data.count}}
+	{% for n in range(1,page_data.total_pages+1) %}
+		{% if n == page_data.page %}
+		<b>{{ n }}</b>
+		{% else %}
+		<a href="{{ query_data['route'] }}?page={{ n }}">{{ n }}</a>
+		{% endif%}
+	{% endfor %}
+	{% if page_data.page < page_data.total_pages %}
+	<a href="{{ query_data['route'] }}?page={{ page_data.page + 1}}">Next</a>
+	{% endif %}
+Displaying {{ (page_data.page * page_data.limit) - (page_data.limit - 1) }} - {{ page_data.page * page_data.limit }} of {{ page_data.count}}
+Total pages = {{ page_data.total_pages }}
 </td>
 </tr></table>
 {% include 'table_loader.html' %}
