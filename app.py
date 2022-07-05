@@ -13,10 +13,7 @@ from math import ceil
 
  
 model = Model()
-view = View()
-controller = Controller(_model=model, _view=view)
-view.set_controller(controller)
-#session = Session()
+controller = Controller(_model=model)
 Base.metadata.create_all(engine)
 connection = engine.connect()
 
@@ -64,18 +61,7 @@ def home():
 def api():
     return render_template('api.html')
 
-#****************************
-#Product Functions
-#
-#****************************
-
-@app.route('/products_gridjs')
-def gridjs_list_products():
-    return render_template('ajaxgrid.html')
-
-@app.route(PRODUCT_LIST_ROUTE)
-def list_products():
-    #this version includes pagination
+def query_page_data(route=None,add_route=None):
     key_value_pairs = request.args
     query_string ={}
     for key in key_value_pairs:
@@ -89,7 +75,6 @@ def list_products():
             pass
         else:
             query_string[key]=key_value_pairs[key]
-            
             
     direction = request.args.get('direction')
     sort = request.args.get('sort')
@@ -112,20 +97,28 @@ def list_products():
                'total_pages':total_pages}
     query_data={'result':result,
                 'keys':keys,
-                'entity':'product',
-                'route':PRODUCT_LIST_ROUTE,
-                'query_string':query_string,
+                'sub_route':add_route,
+                'route':route,
+                #'query_string':query_string,
                 'sort':sort,
                 'direction':direction,
                 }
-    #return render_template('list_entity.html', result=result,keys=keys, entity='product', page_data=page_data)
-    return render_template('list_entity.html', query_data=query_data, page_data=page_data)
-    
-    # result = get_products()
-    # keys = controller.get_product_keys() #get all attributes of Product
-    # return render_template('list_entity.html', result=result, keys=keys, entity='product')
-    
+    return {'page_data':page_data,
+            'query_data':query_data}
+#****************************
+#Product Functions
+#
+#****************************
 
+@app.route('/products_gridjs')
+def gridjs_list_products():
+    return render_template('ajaxgrid.html')
+
+@app.route(PRODUCT_LIST_ROUTE)
+def list_products():
+    data = query_page_data(PRODUCT_LIST_ROUTE,'product')
+    return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
+    
 #Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
 #I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
 #should only allow numerical input. Longer strings may need require a multiline text area. 
@@ -167,10 +160,13 @@ def delete_product(product_id=None):
 
 @app.route(STORE_LIST_ROUTE)
 def list_stores():
-    result = get_stores()
-    keys = controller.get_store_keys() #get all attributes of Product
-    return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
-    #only one listing page
+    data = query_page_data(STORE_LIST_ROUTE,'store')
+    return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
+   
+    # result = get_stores()
+    # keys = controller.get_store_keys() #get all attributes of Product
+    # return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
+    # #only one listing page
 
 @app.route('/view_store/<store_id>')
 def view_store(store_id=None):

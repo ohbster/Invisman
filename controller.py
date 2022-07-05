@@ -1,10 +1,9 @@
-from multipledispatch import dispatch
-#from backend import Model
 
 class Controller(object):
-    def __init__(self, _model, _view):
+    def __init__(self,_model):
+    #def __init__(self, _model, _view):
         self.model = _model
-        self.view = _view
+        #self.view = _view
     
     #****************************
     #Common Functions

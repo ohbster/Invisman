@@ -7,7 +7,7 @@
 	<table>
 		<tr>
 			<td>
-				<b><a href="/home">..{{ query_data['route'] }}</a></b>
+				<b><a href="/home">home</a>{{ query_data['route'] }}</b>
 	</td>
 	<td><div id="page_menu">
 	{# test below for out of bounds #}
@@ -50,7 +50,7 @@ Total pages = {{ page_data.total_pages }}
 </div>
 </td>
 <td>
-	<form action="/add_{{ query_data['entity'] }}" method="GET">
+	<form action="/add_{{ query_data['sub_route'] }}" method="GET">
 		<input type='submit' value='add'/>
 	</form>
 </td>

@@ -5,9 +5,6 @@ from sqlalchemy import inspect
 from backend import get_session
 from backend import session
 
-#session = get_session()
-controller = view.get_controller()
-
 @app.route('/api/test_get_store')
 def test_get_store(store_id=1):
     return json.loads(controller.get_store(store_id))
@@ -163,55 +160,9 @@ def test_filters():
     key_value_pairs = request.args
     direction = request.args.get('direction')
     sort = request.args.get('sort')
-    
-    #return key_value_pairs
-    #return controller.get_entities(Product)
     print(key_value_pairs)
     return controller.query_product(key_value_pairs,sort,direction)
 @app.route('/test/query_product')
 def test_product_query():
     pass
     
-#SCRAP AREA
-"""
- def query_json3(self, query=None):
-        i = 0
-        #testing
-        query = session.query(Store)
-        data = {'data':[{}]}
-        #get the string name of the orm model
-        #query_desc = query.column_descriptions[0]['name']
-        
-        #return the type of the orm model
-        query_type = query.column_descriptions[0]['type']
-        
-        if query.count() < 1:
-            return None
-        else:
-            #print the column names of the orm model
-            insp = inspect(query_type)
-            for x in insp.all_orm_descriptors.keys():
-                print(x)
-            for row in query:    
-                for column in insp.all_orm_descriptors.keys():
-                    data['data'][i][column] = getattr(query,column)
-                    i = i + 1
-                
-                #query_name = query.column_descriptions.name
-            return json.dumps(data)   
-"""
-
-"""
-def query_json2(self):
-        #testing purposes
-        query = session.query(Store).filter_by(id=1).one()
-        
-        
-        i = 0
-        table = 'stores'
-        data = {'data':[{}]}
-        for column in Store.metadata.tables[table].columns.keys():
-            data['data'][i][column] = getattr(query,column)
-            i = i + 1
-        return json.dumps(data)
-"""

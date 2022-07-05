@@ -60,17 +60,6 @@ class Model():
         else:
             return None
     
-    #@dispatch(Product)
-    #this function was made redundant by set_entity    
-    # def add_entity(self, new_entity=None):
-    #     with get_session() as session:
-    #         try:
-    #             session.add(new_entity)
-    #         except:
-    #             session.rollback()
-    #         else: 
-    #             session.commit()
-    
     def get_entity(self,model=None,entity_id=None):
         entity = session.query(model).get(entity_id)
         return self.row_as_dict(entity)
@@ -89,9 +78,6 @@ class Model():
     def get_entity_keys(self,model=None): 
         return [str(attribute.key)
         for attribute in inspect(model).columns]
-        #This returned relationships as well. caused problems. 
-        # keys = inspect(model).all_orm_descriptors.keys()
-        # return keys
         
     def query(self, model=None, args=None, sort=None, direction=None, paginate=False):
         #TODO: This works, but looks sloppy. Try to clean this up
