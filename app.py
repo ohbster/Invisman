@@ -58,7 +58,7 @@ def home():
 def api():
     return render_template('api.html')
 
-def query_page_data(route=None,add_route=None):
+def query_page_data(model=None,route=None,add_route=None):
     key_value_pairs = request.args
     query_string ={}
     for key in key_value_pairs:
@@ -83,8 +83,11 @@ def query_page_data(route=None,add_route=None):
         page = int(request.args.get('page'))
     except: # page is None:
         page = 1
-    keys = controller.get_product_keys() #get all attributes of Product
-    query = controller.query_product(query_string,sort,direction,paginate=True)
+        
+    properties = controller.entity_properties(model)
+    #keys = controller.get_product_keys() #get all attributes of Product
+    #query = controller.query_product(query_string,sort,direction,paginate=True)
+    query = controller.query(model,query_string,sort,direction,paginate=True)
     result = controller.paginate(query['query'],limit,page)
     total_pages = ceil(query['count'] / limit)
     #dictionaries to send to template
@@ -93,10 +96,9 @@ def query_page_data(route=None,add_route=None):
                'count':query['count'],
                'total_pages':total_pages}
     query_data={'result':result,
-                'keys':keys,
+                'properties':properties,
                 'sub_route':add_route,
                 'route':route,
-                #'query_string':query_string,
                 'sort':sort,
                 'direction':direction,
                 }
@@ -113,7 +115,7 @@ def gridjs_list_products():
 
 @app.route(PRODUCT_LIST_ROUTE)
 def list_products():
-    data = query_page_data(PRODUCT_LIST_ROUTE,'product')
+    data = query_page_data(Product,PRODUCT_LIST_ROUTE,'product')
     return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
     
 #Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
@@ -122,13 +124,12 @@ def list_products():
 @app.route('/add_product', methods=['GET'])
 def new_product():
     #to return product keys as json.
-    keys = controller.get_product_keys()
     properties = controller.entity_properties(Product)
     #return render_template('add_product.html', keys=keys)
     entity_data={
         'properties':properties,
         'cancel_route':PRODUCT_LIST_ROUTE,
-        'confirm_route':'/add_product',
+        'submit_route':'/add_product',
         }
     return(render_template('add_entity.html', entity_data=entity_data))
 
@@ -150,7 +151,15 @@ def update_product(product_id=None):
 def view_product(product_id=None):
     product = controller.get_product(product_id=product_id)
     properties = controller.entity_properties(Product)
-    return render_template('view_product.html', product=product, properties=properties)
+    entity_data={
+        'row':product,
+        'properties':properties,
+        'cancel_route':PRODUCT_LIST_ROUTE,
+        'submit_route':'/update_product',
+        'delete_route':'/delete_product',
+        }
+    
+    return render_template('view_entity.html', entity_data=entity_data)
 
 @app.route('/delete_product/<product_id>')
 def delete_product(product_id=None):
@@ -164,7 +173,7 @@ def delete_product(product_id=None):
 
 @app.route(STORE_LIST_ROUTE)
 def list_stores():
-    data = query_page_data(STORE_LIST_ROUTE,'store')
+    data = query_page_data(Store,STORE_LIST_ROUTE,'store')
     return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
 
 @app.route('/view_store/<store_id>')

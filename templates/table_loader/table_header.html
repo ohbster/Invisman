@@ -1,5 +1,5 @@
 {% include 'table_loader/redraw_query.html' %}
-{% for key in query_data['keys'] %}
+{% for key in query_data['properties'] %}
   <th><a href="javascript:redraw_sort('{{ key }}');">{{ key }}
 {% if query_data['sort'] == key %}
   {% if query_data['direction'] == 'asc' %}

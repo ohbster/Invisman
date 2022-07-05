@@ -9,8 +9,8 @@ class Controller(object):
     #Common Functions
     #
     #****************************
-    def query(self, model=None, args=None, sort=None, direction='asc'):
-        return self.model.query(self, model, args, sort, direction)
+    def query(self, model=None, args=None, sort=None, direction='asc',paginate=False):
+        return self.model.query(model, args, sort, direction, paginate)
     
     def query_json(self, query=None):
         return self.model.query_json(query)
