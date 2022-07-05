@@ -9,7 +9,7 @@
   <p><a href="/api/products">/api/products</a></p>
   <p><a href="/api/stores">/api/stores</a></p>
   <hr></hr>
-  <p>Guide: </p>
+  <p>Query String Guide: </p>
   <p>For "equality" use [table]?(key)=(value)</p>
   <p>For "less than" use [table]?lt=(key),(value)</p>
   <p>For "less than or equal to" use [table]?le=(key),(value)</p>
@@ -18,8 +18,10 @@
   <p>To sort by column use sort=(key)</p>
   <p>To sort in ascending/descending order use direction=(asc/desc)
 
-  <p>Example: <a href="api/products?sort=id&direction=asc&gt=id,20&le=id,30">For ID greater than 20 and less than or equal to 30, sort descending by ID</p>
-
+  <p>Example: For id greater than 20 and less than or equal to 30, sort descending by id</p>
+  <p><a href="api/products?sort=id&direction=desc&gt=id,20&le=id,30">
+    /api/products?sort=id&amp;direction=desc&amp;gt=id,20&amp;le=id,30</a></p>
+  <p><a href="/">Back<a/></p>
 
 </body>
 </html>

@@ -10,7 +10,6 @@ from view import View
 from view import *
 import json
 from math import ceil
-
  
 model = Model()
 controller = Controller(_model=model)
@@ -34,7 +33,6 @@ def get_products():
     direction = request.args.get('direction')
     sort = request.args.get('sort')
     return controller.query_product(key_value_pairs,sort,direction)
-    #return controller.get_entities(Product)
         
 @app.route('/api/stores')
 def get_stores():
@@ -42,7 +40,6 @@ def get_stores():
     direction = request.args.get('direction')
     sort = request.args.get('sort')
     return controller.query_product(key_value_pairs,sort,direction)
-    #return controller.get_entities(Store)
 
 #****************************
 #Front-end Functions
@@ -162,11 +159,6 @@ def delete_product(product_id=None):
 def list_stores():
     data = query_page_data(STORE_LIST_ROUTE,'store')
     return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
-   
-    # result = get_stores()
-    # keys = controller.get_store_keys() #get all attributes of Product
-    # return render_template('list_entity.html', result=result, keys=keys, entity='store') #include an entity type keys to use
-    # #only one listing page
 
 @app.route('/view_store/<store_id>')
 def view_store(store_id=None):
@@ -180,7 +172,6 @@ def view_store(store_id=None):
 @app.route('/<store_id>/inventory')
 def OLD__list_inventory(store_id=None):
     result = controller.get_inventory(store_id)
-    #print(f'result = {result}')
     keys = controller.get_inventory_keys()
     return render_template('list_inventory.html', result=result, keys=keys, store_id=store_id, entity='inventory')
 

@@ -6,7 +6,6 @@ from flask import url_for
 from flask import render_template
 from models import *
 import json
-from multipledispatch import dispatch
 from contextlib import contextmanager
 #from app import get_session
 
@@ -73,7 +72,6 @@ class Model():
         #         'message': 'No results',
         #         'response': '200',
         #         }]}
-    
     
     def get_entity_keys(self,model=None): 
         return [str(attribute.key)
@@ -167,11 +165,10 @@ class Model():
     
     #Create
     
-    @dispatch(Product)
-    def add_product(self, new_product=None):
-        self.add_entity(new_product)
+    # @dispatch(Product)
+    # def add_product(self, new_product=None):
+    #     self.add_entity(new_product)
     
-    @dispatch(dict)
     def add_product(self, product_dict=None):
         self.set_entity(Product, None, product_dict)
     
@@ -190,13 +187,11 @@ class Model():
 
     #Updates
  
-    @dispatch(str,dict)
     def set_product(self, product_id=None, attrs=None): #attrs is json TODO: Need to pass product id into signature to avoid 
         return self.set_entity(Product,product_id,attrs)
      
     #delete 
      
-    @dispatch(str)
     def delete_product(self, product_id):
         session.query(Product).filter_by(id=product_id).delete()
         session.commit()   
@@ -265,38 +260,5 @@ class Model():
         
         return result
     
-    # def add_quantity(self,product_id=None, store_id=None, quantity=None):
-    #     #return self.model.add_quantity(product_id, store_id, quantity)
-    #     pass
-    #
-    # def get_quantities(self):
-    #     #return self.model.get_quantities()
-    #     pass
-    #
-    # def get_quantity(self, product_id = None, store_id = None):
-    #     #return self.model.get_quantity(product_id, store_id)
-    #     pass
-
-    #****************************
-    #Relationship Functions
-    #
-    #****************************
-    
-    # def get_store_quantities(self, _store_id):
-    #     #return self.model.get_store_quantities(_store_id)
-    #     pass
-    #
-    # def get_product_quantities(self, _store_id):
-    #     #return self.model.get_product_quantities(_store_id)
-    #     pass
-    #
-    # def add_product_quantity(self, _product_quantity = None):
-    #     #self.model.add_product_quantity(_product_quantity)
-    #     pass
-    #
-    # def set_quantity(self, product_id = None, store_id = None, quantity = None):
-    #     #self.model.set_quantity(product_id, store_id, quantity)
-    #     pass
-    #
 
     

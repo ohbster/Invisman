@@ -10,7 +10,7 @@ class Controller(object):
     #
     #****************************
     def query(self, model=None, args=None, sort=None, direction='asc'):
-        return self.model.query(self, model=None, args=None, sort=None, direction='asc')
+        return self.model.query(self, model, args, sort, direction)
     
     def query_json(self, query=None):
         return self.model.query_json(query)
@@ -106,25 +106,3 @@ class Controller(object):
     def get_inventories(self):
         return self.model.get_inventories()
     
-    #****************************
-    #Relationship Functions
-    #
-    #****************************
-    
-    # def get_store_quantities(self, _store_id):
-    #     return self.model.get_store_quantities(_store_id)
-    #
-    # def get_product_quantities(self, _store_id):
-    #     return self.model.get_product_quantities(_store_id)
-    
-    # def add_product_quantity(self, _product_quantity = None):
-    #     self.model.add_product_quantity(_product_quantity)
-    
-    #********
-    #Testing below
-    #********
-    # def query_json2(self, query=None):
-    #     return self.model.query_json2(query)
-    #
-    # def query_json3(self, query=None):
-    #     return self.model.query_json3(query)

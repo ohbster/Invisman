@@ -22,13 +22,17 @@ body {
 }
 a:link {
     color: #fdda5c;
-    text-decoration: none;}
+    text-decoration: none;
+}
 a:visited {
     color: #fdda5c;
-    text-decoration: none;}
+    text-decoration: none;
+}
 a:hover {
     color: #fdda5c;
-    text-decoration: none;}
+    text-decoration: none;
+}
 a:active {
     color: #fdda5c;
-    text-decoration: none;}
+    text-decoration: none;
+}
