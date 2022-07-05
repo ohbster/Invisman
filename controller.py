@@ -51,8 +51,8 @@ class Controller(object):
     def delete_product(self, product_id=None):
         return self.model.delete_product(product_id)
     
-    def query_product(self,args=None, sort=None, direction=None, paginate=True):
-        return self.model.query_product(args,sort,direction)
+    def query_product(self,args=None, sort=None, direction=None, paginate=False):
+        return self.model.query_product(args,sort,direction,paginate)
     
     def paginate(self, query=None,limit=None,page=1):
         return self.model.paginate(query,limit,page)

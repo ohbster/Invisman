@@ -1,0 +1,18 @@
+<script>
+function redraw_sort(key){
+  current_url = new URL(window.location.href);
+  if (current_url.searchParams.get('sort')==key){
+    if (current_url.searchParams.get('direction')=='asc'){
+      current_url.searchParams.set('direction','desc');
+  } else {
+    current_url.searchParams.set('direction','asc');
+  }
+} else {
+  current_url.searchParams.set('sort',key);
+  current_url.searchParams.set('direction','asc')
+
+}
+
+  window.open(current_url,name='_self');
+}
+</script>

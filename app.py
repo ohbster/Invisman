@@ -76,7 +76,21 @@ def gridjs_list_products():
 @app.route(PRODUCT_LIST_ROUTE)
 def list_products():
     #this version includes pagination
-    key_value_pairs = request.args #TODO!! omit direction, sort, limit, and page
+    key_value_pairs = request.args
+    query_string ={}
+    for key in key_value_pairs:
+        if key == 'limit':
+            pass
+        elif key == 'sort':
+            pass
+        elif key == 'page':
+            pass
+        elif key == 'direction':
+            pass
+        else:
+            query_string[key]=key_value_pairs[key]
+            
+            
     direction = request.args.get('direction')
     sort = request.args.get('sort')
     try:
@@ -88,7 +102,7 @@ def list_products():
     except: # page is None:
         page = 1
     keys = controller.get_product_keys() #get all attributes of Product
-    query = controller.query_product(key_value_pairs,sort,direction,paginate=True)
+    query = controller.query_product(query_string,sort,direction,paginate=True)
     result = controller.paginate(query['query'],limit,page)
     total_pages = ceil(query['count'] / limit)
     #dictionaries to send to template
@@ -99,7 +113,10 @@ def list_products():
     query_data={'result':result,
                 'keys':keys,
                 'entity':'product',
-                'route':PRODUCT_LIST_ROUTE
+                'route':PRODUCT_LIST_ROUTE,
+                'query_string':query_string,
+                'sort':sort,
+                'direction':direction,
                 }
     #return render_template('list_entity.html', result=result,keys=keys, entity='product', page_data=page_data)
     return render_template('list_entity.html', query_data=query_data, page_data=page_data)

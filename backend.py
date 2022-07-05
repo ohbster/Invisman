@@ -93,7 +93,7 @@ class Model():
         # keys = inspect(model).all_orm_descriptors.keys()
         # return keys
         
-    def query(self, model=None, args=None, sort=None, direction=None, paginate=True):
+    def query(self, model=None, args=None, sort=None, direction=None, paginate=False):
         #TODO: This works, but looks sloppy. Try to clean this up
         keys = self.get_entity_keys(model)
         columns = inspect(model).mapper.columns

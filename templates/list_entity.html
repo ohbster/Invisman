@@ -7,13 +7,21 @@
 	<table>
 		<tr>
 			<td>
-	<form action="/add_{{ query_data['entity'] }}" method="GET">
-		<input type='submit' value='add'/>
-	</form></td>
-	<td>
+				<b><a href="/home">..{{ query_data['route'] }}</a></b>
+	</td>
+	<td><div id="page_menu">
 	{# test below for out of bounds #}
 	{% if page_data.page>1 %}
-		<a href="{{ query_data['route'] }}?page={{ page_data.page -1}}">Prev</a>
+		<script>
+			let prev_page_menu = document.getElementById("page_menu")
+			let prev_url = new URL(window.location.href);
+			prev_url.searchParams.set('page', {{ page_data['page']-1 }})
+			let a_prev = document.createElement('a');
+			let textNode_prev = document.createTextNode("Prev");
+			a_prev.appendChild(textNode_prev);
+			a_prev.href=prev_url;
+			prev_page_menu.prepend(a_prev)
+		</script>
 	{% endif %}
 	{# Loop insert the page numbers here #}
 	{% for n in range(1,page_data.total_pages+1) %}
@@ -23,11 +31,28 @@
 		<a href="{{ query_data['route'] }}?page={{ n }}">{{ n }}</a>
 		{% endif%}
 	{% endfor %}
+
 	{% if page_data.page < page_data.total_pages %}
-	<a href="{{ query_data['route'] }}?page={{ page_data.page + 1}}">Next</a>
+	<script>
+		let page_menu = document.getElementById("page_menu")
+		let next_url = new URL(window.location.href);
+		next_url.searchParams.set('page', {{ page_data['page']+1 }})
+		let a_next = document.createElement('a');
+		let textNode = document.createTextNode("Next");
+		a_next.appendChild(textNode);
+		a_next.href=next_url;
+		page_menu.appendChild(a_next)
+	</script>
 	{% endif %}
+	{% set pagelimit = page_data.page * page_data.limit %}
 Displaying {{ (page_data.page * page_data.limit) - (page_data.limit - 1) }} - {{ page_data.page * page_data.limit }} of {{ page_data.count}}
 Total pages = {{ page_data.total_pages }}
+</div>
+</td>
+<td>
+	<form action="/add_{{ query_data['entity'] }}" method="GET">
+		<input type='submit' value='add'/>
+	</form>
 </td>
 </tr></table>
 {% include 'table_loader.html' %}

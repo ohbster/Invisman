@@ -1,3 +1,12 @@
-{% for key in keys %}
-  <th>{{ key }}</th>
+{% include 'table_loader/redraw_query.html' %}
+{% for key in query_data['keys'] %}
+  <th><a href="javascript:redraw_sort('{{ key }}');">{{ key }}
+{% if query_data['sort'] == key %}
+  {% if query_data['direction'] == 'asc' %}
+    &#8963;
+  {% elif query_data['direction'] == 'desc' %}
+    &#8964;
+  {% endif %}
+{% endif %}
+  </a></th>
 {% endfor %}
