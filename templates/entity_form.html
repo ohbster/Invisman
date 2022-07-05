@@ -1,0 +1,45 @@
+{% set properties = entity_data['properties'] %}
+<form id="entity_form" method="POST">
+{% for key in entity_data['properties'] %}
+  {% if key == 'id' %}
+    {# If update, include the id in fields, but mark as readonly. Otherwise, omit #}
+    {% if update_request %}
+      <p> {{ key }} = <input type= "text" readonly = true name = "{{ key }}"/></p>
+    {% endif %}
+  {% elif properties[key] == "BOOLEAN" %}
+  <p> {{ key }} = <select name="{{ key }}" id="{{ key }}">
+    <option value='False'>False</option>
+    <option value='True'>True</option>
+  </select>
+  {% if product[key] == True %}
+  <script>
+    sel = document.getElementById('{{ key }}');
+    sel.selectedIndex = 1;
+  </script>
+  {% endif %}
+
+  {% elif properties[key] == "FLOAT" %}
+  <p> {{ key }} = <input type="number" step=0.01 name="{{ key }}" placeholder="Value greater than 0"/></p>
+  {% elif properties[key] == "INTEGER" %}
+  <p> {{ key }} = <input type="number" step=1 name="{{ key }}" placeholder="Value greater than 0"/></p>
+  {% else %}
+  <p> {{ key }} = <input type= "text" name = "{{ key }}"/></p>
+  {% endif %}
+{% endfor %}
+
+{# Draw buttons #}
+{% if update_request %}
+{# Update Request #}
+    <p>
+    <input type = "submit" value = "Update" formaction = "{{ entity_data['submit_route'] }}/{{ entity['id'] }}"/>
+    <input type = "submit" value = "Close" formaction="{{ entity_data['cancel_route'] }}" formmethod="get"/>
+    <input type = "submit" value = "Delete" formaction="{{ entity_data['delete_route'] }}/{{ product['id'] }}" formmethod="get"/></p>
+  </form>
+{% else %}
+{# Add request #}
+    <p>
+      <input type = "submit" value = "Submit" formaction = "{{entity_data['submit_route'] }}"/>
+      <input type = "button" value = "Cancel" onclick="location.href='{{ entity_data['cancel_route'] }}'" formmethod="get"/>
+    </p>
+
+{% endif %}

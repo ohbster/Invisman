@@ -123,7 +123,14 @@ def list_products():
 def new_product():
     #to return product keys as json.
     keys = controller.get_product_keys()
-    return render_template('add_product.html', keys=keys)
+    properties = controller.entity_properties(Product)
+    #return render_template('add_product.html', keys=keys)
+    entity_data={
+        'properties':properties,
+        'cancel_route':PRODUCT_LIST_ROUTE,
+        'confirm_route':'/add_product',
+        }
+    return(render_template('add_entity.html', entity_data=entity_data))
 
 #The Below function can add a new_product (or any ORM object) to database, and allows for change in schema.
 @app.route('/add_product', methods=['POST'])

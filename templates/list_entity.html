@@ -10,43 +10,33 @@
 				<b><a href="/home">home</a>{{ query_data['route'] }}</b>
 	</td>
 	<td><div id="page_menu">
-	{# test below for out of bounds #}
+	{# Previous page button #}
 	{% if page_data.page>1 %}
-		<script>
-			let prev_page_menu = document.getElementById("page_menu")
-			let prev_url = new URL(window.location.href);
-			prev_url.searchParams.set('page', {{ page_data['page']-1 }})
-			let a_prev = document.createElement('a');
-			let textNode_prev = document.createTextNode("Prev");
-			a_prev.appendChild(textNode_prev);
-			a_prev.href=prev_url;
-			prev_page_menu.prepend(a_prev)
-		</script>
+		<a href="javascript:go_prev()">Prev</a>
 	{% endif %}
 	{# Loop insert the page numbers here #}
+	Page:
 	{% for n in range(1,page_data.total_pages+1) %}
 		{% if n == page_data.page %}
 		<b>{{ n }}</b>
 		{% else %}
-		<a href="{{ query_data['route'] }}?page={{ n }}">{{ n }}</a>
+		{# Page number buttons #}
+		<a href="javascript:go_to({{ n }})">{{ n }}</a>
 		{% endif%}
 	{% endfor %}
-
+	{# Next page button #}
 	{% if page_data.page < page_data.total_pages %}
-	<script>
-		let page_menu = document.getElementById("page_menu")
-		let next_url = new URL(window.location.href);
-		next_url.searchParams.set('page', {{ page_data['page']+1 }})
-		let a_next = document.createElement('a');
-		let textNode = document.createTextNode("Next");
-		a_next.appendChild(textNode);
-		a_next.href=next_url;
-		page_menu.appendChild(a_next)
-	</script>
+	<a href="javascript:go_next()">Next</a>
 	{% endif %}
 	{% set pagelimit = page_data.page * page_data.limit %}
 &emsp;&emsp;
 Displaying {{ (page_data.page * page_data.limit) - (page_data.limit - 1) }} - {{ page_data.page * page_data.limit }} of {{ page_data.count}}
+&emsp;&emsp;
+Results shown per page:
+<a href="javascript:set_limit(15)">15</a> |
+<a href="javascript:set_limit(25)">25</a> |
+<a href="javascript:set_limit(50)">50</a> |
+<a href="javascript:set_limit(100)">100</a>
 
 </div>
 </td>
