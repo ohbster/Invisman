@@ -192,7 +192,8 @@ def list_inventory(store_id=None):
 @app.route('/<store_id>/add_inventory')
 def new_inventory(store_id=None):
     properties = controller.product_properties()
-    catalog = controller.query(Product)
+    #catalog = controller.query(Product)
+    catalog = controller.get_unlisted_products(store_id)
     return render_template('add_inventory.html',properties=properties,store_id=store_id,catalog=catalog)
 
 @app.route('/<store_id>/add_inventory',methods=['POST'])

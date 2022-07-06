@@ -1,5 +1,5 @@
 from database import Session, engine
-from sqlalchemy import text, select, inspect
+from sqlalchemy import text, select, inspect, not_
 
 from flask import Flask
 from flask import url_for
@@ -257,18 +257,19 @@ class Model():
     
     def get_unlisted_products(self, store_id):
         subquery1 = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
-        result = session.query(Product).filter(Product.id.in_(subquery1) )
+        result = session.query(Product).filter(Product.id.not_in(subquery1) )
+        
+        return json.loads(self.query_json(result))
         #result = session.query(Product.id).
         #Get all products where product_id is not in 
         ######(select all product_id from inventory where store_id = <store_id>)
-        pass
     
-    def get_listed_products(self, store_id):
-        #This is reduntant: get_inventory(store_id) does this
-        subquery1 = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
-        result = session.query(Product).filter(Product.id.in_(subquery1) )
-        
-        return result
+    # def get_listed_products(self, store_id):
+    #     #This is reduntant: get_inventory(store_id) does this
+    #     listed = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
+    #     result = session.query(Product).filter(Product.id.not_in(listed.id) )
+    #
+    #     return result
     
 
     

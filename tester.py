@@ -165,4 +165,8 @@ def test_filters():
 @app.route('/test/query_product')
 def test_product_query():
     pass
+
+@app.route('/test/<store_id>/unlisted')
+def test_unlisted(store_id=None):
+    return controller.get_unlisted_products(store_id)
     
