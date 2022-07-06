@@ -180,6 +180,9 @@ class Model():
     
     def get_product_keys(self):
         return self.get_entity_keys(Product)
+    
+    def product_properties(self):
+        return self.entity_properties(Product)
 
     #Updates
  
@@ -227,6 +230,17 @@ class Model():
     
     def add_inventory(self, inventory_dict):
         self.set_entity(Inventory, None, inventory_dict)
+        
+    def multiadd_inventory(self, store_id=None, product_ids=None):
+        #TODO: Rewrite. This does not account for changes to inventory schema
+        for product in product_ids['data']: 
+            self.add_inventory({
+            'store_id':store_id,
+            'quantity':0,
+            'active':False,
+            'product_id':product['id']
+            })
+            
     
     def get_inventory(self, store_id):
         #return all inventory for store_id

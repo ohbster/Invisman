@@ -191,13 +191,13 @@ def list_inventory(store_id=None):
 
 @app.route('/<store_id>/add_inventory')
 def new_inventory(store_id=None):
-    keys = controller.get_inventory_keys()
+    properties = controller.product_properties()
     catalog = controller.query(Product)
-    return render_template('add_inventory.html',keys=keys,store_id=store_id,catalog=catalog)
+    return render_template('add_inventory.html',properties=properties,store_id=store_id,catalog=catalog)
 
 @app.route('/<store_id>/add_inventory',methods=['POST'])
 def add_inventory(store_id=None):
-    form_data = request.form
-    controller.add_inventory(form_data)
+    json_data = request.get_json()
+    controller.multiadd_inventory(store_id,json_data)
     return redirect(f'/{store_id}/inventory')
     

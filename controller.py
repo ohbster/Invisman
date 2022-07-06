@@ -40,6 +40,9 @@ class Controller(object):
     
     def get_product_keys(self):
         return self.model.get_product_keys()
+    
+    def product_properties(self):
+        return self.model.product_properties()
 
     # def get_unlisted_products(self, store_id):
     #     return self.model.get_unlisted_products(store_id)
@@ -97,6 +100,9 @@ class Controller(object):
     def add_inventory(self,inventory_dict=None):
         return self.model.add_inventory(inventory_dict)
         
+    def multiadd_inventory(self,store_id=None,product_ids=None):
+        return self.model.multiadd_inventory(store_id,product_ids)
+    
     def get_inventory_keys(self):
         return self.model.get_inventory_keys()
     
