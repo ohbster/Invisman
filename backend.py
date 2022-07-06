@@ -264,12 +264,12 @@ class Model():
         #Get all products where product_id is not in 
         ######(select all product_id from inventory where store_id = <store_id>)
     
-    # def get_listed_products(self, store_id):
-    #     #This is reduntant: get_inventory(store_id) does this
-    #     listed = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
-    #     result = session.query(Product).filter(Product.id.not_in(listed.id) )
-    #
-    #     return result
+    def get_listed_products(self, store_id):
+        #This is reduntant: get_inventory(store_id) does this
+        listed = session.query(Inventory.product_id).filter_by(store_id=store_id).subquery()
+        result = session.query(Product).filter(Product.id.in_(listed) )
+    
+        return json.loads(self.query_json(result))
     
 
     

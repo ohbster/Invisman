@@ -187,6 +187,8 @@ def view_store(store_id=None):
 def list_inventory(store_id=None):
     result = controller.get_inventory(store_id)
     keys = controller.get_inventory_keys()
+    #This is wasteful, only need product name. Find way to join tables
+    #products = controller.get_listed_products()
     return render_template('list_inventory.html', result=result, keys=keys, store_id=store_id, entity='inventory')
 
 @app.route('/<store_id>/add_inventory')

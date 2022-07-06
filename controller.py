@@ -112,6 +112,9 @@ class Controller(object):
     def get_inventories(self):
         return self.model.get_inventories()
     
+    def get_listed_products(self,store_id=None):
+        return self.model.get_listed_products(store_id)
+    
     def get_unlisted_products(self,store_id=None):
         return self.model.get_unlisted_products(store_id)
     

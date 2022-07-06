@@ -169,4 +169,8 @@ def test_product_query():
 @app.route('/test/<store_id>/unlisted')
 def test_unlisted(store_id=None):
     return controller.get_unlisted_products(store_id)
+
+@app.route('/test/<store_id>/listed')
+def test_listed(store_id=None):
+    return controller.get_listed_products(store_id)
     

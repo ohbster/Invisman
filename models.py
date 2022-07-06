@@ -12,6 +12,7 @@ class Product(Base):
     description = Column(String(500)) 
     msrp = Column(Float, nullable = False)  
     #active = Column(Boolean, nullable = False)
+    inventory = relationship('Inventory', backref='product', lazy=True)
     
 class Store(Base):
     __tablename__ = 'stores'
