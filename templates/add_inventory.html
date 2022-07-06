@@ -2,16 +2,10 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='invisman_style.css') }}">
-  <script>
-    function move_left(){
 
-    }
-    function move_right(){
-      
-    }
-  </script>
 </head>
 <body>
+
   <table style="width:.1%">
     <tr>
       <td>
@@ -25,17 +19,19 @@
     <td>
   <input type="button" value="&#171;" onclick="move_left()" style="font-size : 20px"/>
   <br/>
-  <input type="button" value="&#187;" onclick="move_right()" style="font-size : 20px"/>
+  <input type="button" value="&#187;" onclick="javascript:move_right()" style="font-size : 20px"/>
 
 </td>
 <td>
-  <select name="catalog" id="addselection" size=20 multiple>
+  <form action="add_inventory" METHOD="POST">
+  <select name="addselection" id="addselection" size=20 multiple>
     <option disabled>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</option>
   </select>
+  </form>
 </td>
 </tr>
 </table>
-  <form action="add_inventory" METHOD="POST">
+
     {% for key in keys %}
       {% if key == 'store_id' %}
         <p>{{ key }}: <input type = "text" name = "{{ key }}" value = "{{ store_id }}" readonly/></p>
@@ -45,6 +41,44 @@
     {% endfor %}
 
     <p><input type = "submit" value = "submit" /></p>
-  </form>
+
+    <script>
+      const catalog = document.querySelector('#catalog');
+      const addselection = document.querySelector('#addselection');
+
+      function move_left(){
+        let selected=[];
+        for(let i=0;i<addselection.options.length;i++){
+          selected[i] = addselection[i].selected;
+        }
+        let index = catalog.options.length;
+        while (index--) {
+          if (selected[index]){
+            const option = new Option(addselection[index].text,addselection[index].value);
+            catalog.add(option,undefined);
+          addselection.remove(index);
+          catalog.selectedIndex =-1;
+          }
+        }
+
+      };
+
+      function move_right(){
+        let selected=[];
+        for(let i=0;i<catalog.options.length;i++){
+          selected[i] = catalog[i].selected;
+        }
+        let index = catalog.options.length;
+        while (index--) {
+          if (selected[index]){
+            const option = new Option(catalog[index].text,catalog[index].value);
+            addselection.add(option,undefined);
+          catalog.remove(index);
+          addselection.selectedIndex =-1;
+          }
+        }
+      };
+    </script>
+
 </body>
 </html>
