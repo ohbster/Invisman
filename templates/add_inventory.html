@@ -2,8 +2,39 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='invisman_style.css') }}">
+  <script>
+    function move_left(){
+
+    }
+    function move_right(){
+      
+    }
+  </script>
 </head>
 <body>
+  <table style="width:.1%">
+    <tr>
+      <td>
+        <select name="catalog" id="catalog" size=20 multiple>
+          <option disabled>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</option>
+        {% for product in catalog['data'] %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+      </select>
+    </td>
+    <td>
+  <input type="button" value="&#171;" onclick="move_left()" style="font-size : 20px"/>
+  <br/>
+  <input type="button" value="&#187;" onclick="move_right()" style="font-size : 20px"/>
+
+</td>
+<td>
+  <select name="catalog" id="addselection" size=20 multiple>
+    <option disabled>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</option>
+  </select>
+</td>
+</tr>
+</table>
   <form action="add_inventory" METHOD="POST">
     {% for key in keys %}
       {% if key == 'store_id' %}

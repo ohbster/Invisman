@@ -85,8 +85,6 @@ def query_page_data(model=None,route=None,add_route=None):
         page = 1
         
     properties = controller.entity_properties(model)
-    #keys = controller.get_product_keys() #get all attributes of Product
-    #query = controller.query_product(query_string,sort,direction,paginate=True)
     query = controller.query(model,query_string,sort,direction,paginate=True)
     result = controller.paginate(query['query'],limit,page)
     total_pages = ceil(query['count'] / limit)
@@ -186,7 +184,7 @@ def view_store(store_id=None):
 #****************************
 
 @app.route('/<store_id>/inventory')
-def OLD__list_inventory(store_id=None):
+def list_inventory(store_id=None):
     result = controller.get_inventory(store_id)
     keys = controller.get_inventory_keys()
     return render_template('list_inventory.html', result=result, keys=keys, store_id=store_id, entity='inventory')
@@ -194,7 +192,8 @@ def OLD__list_inventory(store_id=None):
 @app.route('/<store_id>/add_inventory')
 def new_inventory(store_id=None):
     keys = controller.get_inventory_keys()
-    return render_template('add_inventory.html',keys=keys,store_id=store_id)
+    catalog = controller.query(Product)
+    return render_template('add_inventory.html',keys=keys,store_id=store_id,catalog=catalog)
 
 @app.route('/<store_id>/add_inventory',methods=['POST'])
 def add_inventory(store_id=None):

@@ -82,21 +82,22 @@ class Model():
         keys = self.get_entity_keys(model)
         columns = inspect(model).mapper.columns
         query = session.query(model)
-        for arg in args:
-            if arg in keys: #equality 
-                query = query.filter((columns[arg])==(args[arg]))
-            elif arg == 'lt': #less than
-                split_arg = args[arg].split(',') #seperate "key,value" into "key", "value"
-                query = query.filter((columns[split_arg[0]])<(split_arg[1]))
-            elif arg == 'gt': #greater than
-                split_arg = args[arg].split(',')
-                query = query.filter((columns[split_arg[0]])>(split_arg[1]))
-            elif arg == 'le': #less than or equal
-                split_arg = args[arg].split(',')
-                query = query.filter((columns[split_arg[0]])<=(split_arg[1]))
-            elif arg == 'ge': #greater than or equal
-                split_arg = args[arg].split(',')
-                query = query.filter((columns[split_arg[0]])>=(split_arg[1]))
+        if args is not None:
+            for arg in args:
+                if arg in keys: #equality 
+                    query = query.filter((columns[arg])==(args[arg]))
+                elif arg == 'lt': #less than
+                    split_arg = args[arg].split(',') #seperate "key,value" into "key", "value"
+                    query = query.filter((columns[split_arg[0]])<(split_arg[1]))
+                elif arg == 'gt': #greater than
+                    split_arg = args[arg].split(',')
+                    query = query.filter((columns[split_arg[0]])>(split_arg[1]))
+                elif arg == 'le': #less than or equal
+                    split_arg = args[arg].split(',')
+                    query = query.filter((columns[split_arg[0]])<=(split_arg[1]))
+                elif arg == 'ge': #greater than or equal
+                    split_arg = args[arg].split(',')
+                    query = query.filter((columns[split_arg[0]])>=(split_arg[1]))
         #sorting
         if sort is not None: #check if sort is a valid key
             if direction == 'asc':
@@ -108,7 +109,6 @@ class Model():
         #and offset supplied by flask
         
         if paginate is True: 
-            #return self.paginate(query,25,0)
             result = {'query':query, 
                      'count':query.count()}
             #return query
@@ -164,10 +164,6 @@ class Model():
     #****************************
     
     #Create
-    
-    # @dispatch(Product)
-    # def add_product(self, new_product=None):
-    #     self.add_entity(new_product)
     
     def add_product(self, product_dict=None):
         self.set_entity(Product, None, product_dict)
