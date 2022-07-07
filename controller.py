@@ -62,6 +62,8 @@ class Controller(object):
     #Store Functions
     #
     #****************************
+    def add_store(self, store_dict=None):
+        return self.model.add_store(store_dict)
         
     def get_store(self, store_id):
         store = self.model.get_store(store_id)
@@ -75,6 +77,9 @@ class Controller(object):
     
     def store_query(self,args=None, sort=None, direction=None):
         return self.model.store_query(args,sort,direction)
+    
+    def store_properties(self):
+        return self.model.store_properties()
     
     #****************************
     #Quantity Functions

@@ -18,7 +18,7 @@ class Store(Base):
     __tablename__ = 'stores'
     id = Column(Integer, primary_key = True, nullable = False) 
     name = Column(String, nullable = False)
-    type = Column(String(20), nullable = False) 
+    website = Column(String(20), nullable = False) 
     address = Column(String(200), nullable = False) 
     
     inventory = relationship('Inventory', backref='store', lazy=True)

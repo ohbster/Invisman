@@ -8,7 +8,7 @@ def add_stores():
         store = Store(
             name = fake.company(),
             address = fake.street_address(),
-            type = fake.url(),
+            website = fake.url(),
             )
         session.add(store)
     session.commit()

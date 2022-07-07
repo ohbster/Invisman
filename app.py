@@ -122,7 +122,7 @@ def list_products():
 @app.route('/add_product', methods=['GET'])
 def new_product():
     #to return product keys as json.
-    properties = controller.entity_properties(Product)
+    properties = controller.product_properties()
     #return render_template('add_product.html', keys=keys)
     entity_data={
         'properties':properties,
@@ -177,6 +177,22 @@ def list_stores():
 @app.route('/view_store/<store_id>')
 def view_store(store_id=None):
     return redirect(f'/{store_id}/inventory') #clicking on a store immediately lists its inventory
+
+@app.route('/add_store', methods=['GET'])
+def new_store():
+    properties = controller.store_properties()
+    entity_data={
+        'properties':properties,
+        'cancel_route':STORE_LIST_ROUTE,
+        'submit_route':'/add_store',
+        }
+    return(render_template('add_entity.html', entity_data=entity_data))
+
+@app.route('/add_store', methods=['POST'])
+def add_store():
+    form_data = request.form
+    controller.add_store(form_data)
+    return redirect(STORE_LIST_ROUTE)
 
 #****************************
 #Inventory Functions

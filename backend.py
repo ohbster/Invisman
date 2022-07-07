@@ -201,6 +201,8 @@ class Model():
     #Store Functions
     #
     #****************************
+    def add_store(self, store_dict=None):
+        self.set_entity(Store, None, store_dict)
     
     def get_store(self, store_id):
         query = session.query(Store).filter_by(id=store_id).scalar()
@@ -223,6 +225,9 @@ class Model():
     
     def store_query(self, args=None, sort=None, direction=None):
         return self.query(Store,args,sort,direction)
+    
+    def store_properties(self):
+        return self.entity_properties(Store)
     #****************************
     #Inventory Functions
     #
