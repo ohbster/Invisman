@@ -3,6 +3,10 @@ from sqlalchemy import Date, Float
 from sqlalchemy.orm import relationship
 from database import Base
 
+from database import Session, engine
+Base.metadata.create_all(engine)
+connection = engine.connect()
+
 class Product(Base):
     __tablename__= 'products'
     id = Column(Integer, primary_key = True, nullable = False)

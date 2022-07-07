@@ -116,8 +116,10 @@ class Model():
         #if paginate is set to false, just return the query as json
         else:
             return json.loads(self.query_json(query))
+    
+    
         
-    def paginate(self, query, limit=None, page=1):
+    def paginate(self, query, limit=None, page=None):
         offset = (page - 1)* limit
         query = query.limit(limit).offset(offset)
         return json.loads(self.query_json(query))
@@ -197,6 +199,9 @@ class Model():
         
     def query_product(self, args=None, sort=None, direction=None, paginate=True):
         return self.query(Product,args,sort,direction,paginate)
+    
+    def product_query_page_data(self,):
+        pass
     #****************************
     #Store Functions
     #
@@ -216,15 +221,15 @@ class Model():
         data = json.dumps(data)
         return data
     
+    def query_store(self, args=None, sort=None, direction=None, paginate=True):
+        return self.query(Store,args,sort,direction,paginate)
+    
     def get_stores(self):
         #return self.model.get_stores()
         pass
     
     def get_store_keys(self):
         return self.get_entity_keys(Store)
-    
-    def store_query(self, args=None, sort=None, direction=None):
-        return self.query(Store,args,sort,direction)
     
     def store_properties(self):
         return self.entity_properties(Store)
@@ -246,7 +251,6 @@ class Model():
             'product_id':product['id']
             })
             
-    
     def get_inventory(self, store_id):
         #return all inventory for store_id
         #Try to handle this by overloading get entities using a "filter" argument. I.e. "store_id=<store_id>"

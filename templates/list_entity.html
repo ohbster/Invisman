@@ -30,7 +30,7 @@
 	{% endif %}
 	{% set pagelimit = page_data.page * page_data.limit %}
 </td><td>&emsp;&emsp;
-Displaying {{ (page_data.page * page_data.limit) - (page_data.limit - 1) }} - {{ page_data.page * page_data.limit }} of {{ page_data.count}}
+Displaying {{ (page_data.page * page_data.limit) - (page_data.limit - 1) }} - {{ page_data.page * page_data.limit }} of {{ query_data.count}}
 </td><td>&emsp;&emsp;
 Results shown per page:
 <a href="javascript:set_limit(15)">15</a> |

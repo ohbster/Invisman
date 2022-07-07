@@ -1,20 +1,19 @@
 from flask import Flask
 from flask import url_for, redirect, abort
 from flask import render_template, request
-from database import Session, engine
+
 from sqlalchemy import text, select, inspect
 from controller import Controller
-from models import *
+#from models import *
 from backend import Model
-from view import View
-from view import *
+#from view import View
+#from view import *
 import json
 from math import ceil
  
 model = Model()
 controller = Controller(_model=model)
-Base.metadata.create_all(engine)
-connection = engine.connect()
+
 
 app = Flask(__name__)
 
@@ -58,7 +57,7 @@ def home():
 def api():
     return render_template('api.html')
 
-def query_page_data(model=None,route=None,add_route=None):
+def get_query_string():
     key_value_pairs = request.args
     query_string ={}
     for key in key_value_pairs:
@@ -72,33 +71,46 @@ def query_page_data(model=None,route=None,add_route=None):
             pass
         else:
             query_string[key]=key_value_pairs[key]
-            
+    return query_string
+
+def get_page_data():
     direction = request.args.get('direction')
     sort = request.args.get('sort')
     try:
         limit = int(request.args.get('limit'))
+        if limit is None:
+            limit = 25
     except: #limit is None:
         limit = 25
     try:
         page = int(request.args.get('page'))
+        if page is None:
+            page = 1
     except: # page is None:
         page = 1
-        
-    properties = controller.entity_properties(model)
-    query = controller.query(model,query_string,sort,direction,paginate=True)
-    result = controller.paginate(query['query'],limit,page)
-    total_pages = ceil(query['count'] / limit)
+    return {'direction':direction,
+            'sort':sort,
+            'limit':limit,
+            'page':page,
+        }
+
+
+def query_page_data(route=None,add_route=None, properties=None):
+    query_string = get_query_string()
+    page_data = get_page_data() 
+
+    
+    query = controller.query_product(query_string,page_data['sort'],page_data['direction'],paginate=True)
+    result = controller.paginate(query['query'],page_data['limit'],page_data['page'])
+    total_pages = ceil(query['count'] / page_data['limit'])
     #dictionaries to send to template
-    page_data={'limit':limit,
-               'page':page,
-               'count':query['count'],
-               'total_pages':total_pages}
+    page_data['total_pages']=total_pages
     query_data={'result':result,
                 'properties':properties,
                 'sub_route':add_route,
                 'route':route,
-                'sort':sort,
-                'direction':direction,
+                # 'sort':sort,
+                # 'direction':direction,
                 }
     return {'page_data':page_data,
             'query_data':query_data}
@@ -113,8 +125,20 @@ def gridjs_list_products():
 
 @app.route(PRODUCT_LIST_ROUTE)
 def list_products():
-    data = query_page_data(Product,PRODUCT_LIST_ROUTE,'product')
-    return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
+    properties = controller.product_properties()
+    page_data = get_page_data()
+    query = controller.query_product(get_query_string(),page_data['sort'],page_data['direction'],paginate=True)
+    result = controller.paginate(query['query'],page_data['limit'],page_data['page'])
+    total_pages = ceil(query['count'] / page_data['limit'])
+    page_data['total_pages']=total_pages
+    query_data={'result':result,
+                'properties':properties,
+                'sub_route':'product',
+                'route':PRODUCT_LIST_ROUTE,
+                'count':query['count']
+                }
+    
+    return render_template('list_entity.html', query_data=query_data, page_data=page_data)
     
 #Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
 #I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
@@ -148,7 +172,7 @@ def update_product(product_id=None):
 @app.route('/view_product/<product_id>')
 def view_product(product_id=None):
     product = controller.get_product(product_id=product_id)
-    properties = controller.entity_properties(Product)
+    properties = controller.product_properties()
     entity_data={
         'row':product,
         'properties':properties,
@@ -171,8 +195,21 @@ def delete_product(product_id=None):
 
 @app.route(STORE_LIST_ROUTE)
 def list_stores():
-    data = query_page_data(Store,STORE_LIST_ROUTE,'store')
-    return render_template('list_entity.html', query_data=data['query_data'], page_data=data['page_data'])
+    properties = controller.store_properties()
+    page_data = get_page_data()
+    query = controller.query_store(get_query_string(),page_data['sort'],page_data['direction'],paginate=True)
+    result = controller.paginate(query['query'],page_data['limit'],page_data['page'])
+    total_pages = ceil(query['count'] / page_data['limit'])
+    page_data['total_pages']=total_pages
+    query_data={'result':result,
+                'properties':properties,
+                'sub_route':'store',
+                'route':STORE_LIST_ROUTE,
+                'count':query['count']
+                }
+    
+    return render_template('list_entity.html', query_data=query_data, page_data=page_data)
+ 
 
 @app.route('/view_store/<store_id>')
 def view_store(store_id=None):

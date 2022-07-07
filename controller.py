@@ -75,8 +75,8 @@ class Controller(object):
     def get_store_keys(self):
         return self.model.get_store_keys()
     
-    def store_query(self,args=None, sort=None, direction=None):
-        return self.model.store_query(args,sort,direction)
+    def query_store(self,args=None, sort=None, direction=None, paginate=False):
+        return self.model.query_store(args,sort,direction,paginate)
     
     def store_properties(self):
         return self.model.store_properties()
