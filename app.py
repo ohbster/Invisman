@@ -4,17 +4,12 @@ from flask import render_template, request
 
 from sqlalchemy import text, select, inspect
 from controller import Controller
-#from models import *
 from backend import Model
-#from view import View
-#from view import *
 import json
 from math import ceil
  
 model = Model()
 controller = Controller(_model=model)
-
-
 app = Flask(__name__)
 
 #These variables make it easier to redirect
@@ -94,11 +89,9 @@ def get_page_data():
             'page':page,
         }
 
-
 def query_page_data(route=None,add_route=None, properties=None):
     query_string = get_query_string()
     page_data = get_page_data() 
-
     
     query = controller.query_product(query_string,page_data['sort'],page_data['direction'],paginate=True)
     result = controller.paginate(query['query'],page_data['limit'],page_data['page'])
@@ -140,9 +133,6 @@ def list_products():
     
     return render_template('list_entity.html', query_data=query_data, page_data=page_data)
     
-#Will need to send info about key types to properly render the rows, and fields for adding and modifying data.
-#I.E. A boolean type should display a check mark, and not a text field reading True or False. Numerical fields 
-#should only allow numerical input. Longer strings may need require a multiline text area. 
 @app.route('/add_product', methods=['GET'])
 def new_product():
     #to return product keys as json.
@@ -164,7 +154,6 @@ def add_product():
 
 @app.route('/update_product/<product_id>', methods=['POST'])
 def update_product(product_id=None):
-    #need to pass id to this function
     form_data = request.form
     controller.set_product(product_id=product_id,attrs=form_data)
     return redirect(PRODUCT_LIST_ROUTE)
